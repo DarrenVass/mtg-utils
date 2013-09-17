@@ -1,4 +1,4 @@
-﻿namespace MTGSimulator
+﻿namespace MTGUtils
 {
     partial class MainWindow
     {
@@ -38,13 +38,12 @@
             this.mtgSetsCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.updateSetsButton = new System.Windows.Forms.Button();
             this.allMTGSetsButton = new System.Windows.Forms.Button();
-            this.mtgSetsProgressBar = new System.Windows.Forms.ProgressBar();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.mtgPriceSourceCheckListBox = new System.Windows.Forms.CheckedListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.sqlMTGCardDB = new System.Data.SQLite.SQLiteConnection();
+            this.lblSetsStatus = new System.Windows.Forms.Label();
             this.mainTab.SuspendLayout();
             this.mainTabs.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -101,13 +100,13 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.lblSetsStatus);
             this.groupBox2.Controls.Add(this.Recent);
             this.groupBox2.Controls.Add(this.modernMTGSetsButton);
             this.groupBox2.Controls.Add(this.standardMTGSetsButton);
             this.groupBox2.Controls.Add(this.mtgSetsCheckedListBox);
             this.groupBox2.Controls.Add(this.updateSetsButton);
             this.groupBox2.Controls.Add(this.allMTGSetsButton);
-            this.groupBox2.Controls.Add(this.mtgSetsProgressBar);
             this.groupBox2.Location = new System.Drawing.Point(199, 3);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(309, 142);
@@ -168,13 +167,6 @@
             this.allMTGSetsButton.Text = "All";
             this.allMTGSetsButton.UseVisualStyleBackColor = true;
             this.allMTGSetsButton.Click += new System.EventHandler(this.allMTGSetsButton_Click);
-            // 
-            // mtgSetsProgressBar
-            // 
-            this.mtgSetsProgressBar.Location = new System.Drawing.Point(6, 116);
-            this.mtgSetsProgressBar.Name = "mtgSetsProgressBar";
-            this.mtgSetsProgressBar.Size = new System.Drawing.Size(122, 20);
-            this.mtgSetsProgressBar.TabIndex = 3;
             // 
             // groupBox1
             // 
@@ -241,9 +233,14 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "This Program created by \"JollyGuy\"";
             // 
-            // sqlMTGCardDB
+            // lblSetsStatus
             // 
-            this.sqlMTGCardDB.DefaultTimeout = 30;
+            this.lblSetsStatus.AutoSize = true;
+            this.lblSetsStatus.Location = new System.Drawing.Point(13, 121);
+            this.lblSetsStatus.Name = "lblSetsStatus";
+            this.lblSetsStatus.Size = new System.Drawing.Size(60, 13);
+            this.lblSetsStatus.TabIndex = 9;
+            this.lblSetsStatus.Text = "Status: Idle";
             // 
             // MainWindow
             // 
@@ -259,6 +256,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
@@ -280,12 +278,11 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button allMTGSetsButton;
         private System.Windows.Forms.Button updateSetsButton;
-        private System.Windows.Forms.ProgressBar mtgSetsProgressBar;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button Recent;
         private System.Windows.Forms.Button modernMTGSetsButton;
         private System.Windows.Forms.Button standardMTGSetsButton;
-        private System.Data.SQLite.SQLiteConnection sqlMTGCardDB;
+        private System.Windows.Forms.Label lblSetsStatus;
     }
 }
 

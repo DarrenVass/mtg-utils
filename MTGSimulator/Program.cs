@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using log4net;
 
-namespace MTGSimulator
+namespace MTGUtils
 {
     static class Program
     {

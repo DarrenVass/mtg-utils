@@ -6,11 +6,11 @@ using System.Text;
 using System.Data.SQLite;
 using log4net;
 
-namespace MTGSimulator
+namespace MTGUtils
 {
     class SQLWrapper
     {
-        SQLiteConnection mtgDB;
+        SQLiteConnection MTGDB;
         private readonly ILog log;
 
         public SQLWrapper()
@@ -18,8 +18,8 @@ namespace MTGSimulator
             log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             try
             {
-                mtgDB = new SQLiteConnection("Data Source=MTGPriceDataBase.sqlite;Version=3;");
-                mtgDB.Open();
+                MTGDB = new SQLiteConnection("Data Source=MTGPriceDataBase.sqlite;Version=3;");
+                MTGDB.Open();
                 log.Debug("Using already created MTGPriceDataBase.sqlite");
 
                 CreateTables();
@@ -32,7 +32,7 @@ namespace MTGSimulator
 
         ~SQLWrapper()
         {
-            mtgDB.Close();
+            MTGDB.Close();
         }
 
         /* Will create the Set & Card tables if required */
@@ -40,7 +40,7 @@ namespace MTGSimulator
         {
             log.Debug("Creating Tables if required");
             string createSetTable = "create table if not exists sets(name varchar(50), urlList varchar(256), lastUpdate Date, releaseDate Date);";
-            SQLiteCommand cmd1 = new SQLiteCommand(createSetTable, mtgDB);
+            SQLiteCommand cmd1 = new SQLiteCommand(createSetTable, MTGDB);
             cmd1.ExecuteNonQuery();
 
             //string createCardTable = "create table cards(name varchar(100), url varchar(256), foilURL varchar(256), ";
@@ -53,13 +53,21 @@ namespace MTGSimulator
         {
             List<MTGSet> retSet = new List<MTGSet>();
             string getSetList = "select * from sets";
-            SQLiteCommand cmd = new SQLiteCommand(getSetList, mtgDB);
+            SQLiteCommand cmd = new SQLiteCommand(getSetList, MTGDB);
             SQLiteDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                //retSet.Add(new MTGSet(rdr["name"], rdr["releaseDate"], rdr["lastUpdate"])); TODO SQLDate -> DateTime
+                //MTGSet set = new MTGSet(rdr["name"], rdr["releaseDate"], rdr["lastUpdate"])); // TODO SQLDate -> DateTime
+                //set.URL = rdr["url"];
+                //retSet.Add(set);
             }
             return retSet;
+        }
+
+        /* For saving the updated set list */
+        public void UpdateSetList(List<MTGSet> SetsIn)
+        {
+
         }
     }
 }

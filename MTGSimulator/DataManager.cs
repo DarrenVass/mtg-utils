@@ -4,23 +4,42 @@ using System.Linq;
 using System.Text;
 using System.Data.SQLite;
 
-namespace MTGSimulator
+using System.IO;
+
+using log4net;
+
+namespace MTGUtils
 {
     class DataManager
     {
-        List<MTGSet> Sets;
-        SQLWrapper sqlWrapper;
+        private List<MTGSet> Sets;
+        private SQLWrapper _SQLWrapper;
+        private HTMLParser _HTMLParser;
+
+        private readonly ILog log;
+        private string mainURL = "http://www.mtgprice.com/magic-the-gathering-prices.jsp";
 
         public DataManager()
         {
-            sqlWrapper = new SQLWrapper();
+            _SQLWrapper = new SQLWrapper();
+            _HTMLParser = new HTMLParser(); 
 
-            Sets = sqlWrapper.GetSetList();
+            log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            Sets = _SQLWrapper.GetSetList();
         }
 
+        ~DataManager()
+        {
+            //_SQLWrapper
+        }
+
+        /* Download Set List, Parse It, then save it. */
         public void UpdateSets()
         {
+            URLFetcher Fetcher = new URLFetcher(mainURL);
+            string ret = Fetcher.Fetch();
 
+            Sets = _HTMLParser.ParseSets(ret);
         }
 
         public List<MTGSet> GetSets()

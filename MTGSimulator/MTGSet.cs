@@ -3,24 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MTGSimulator
+namespace MTGUtils
 {
     public class MTGSet
     {
         string SetName;
         DateTime SetDate;
         DateTime SetLastUpdate;
+        public string URL { get; set;}
 
-        public MTGSet(string NameIn, DateTime DateIn, DateTime LastUpdateIn)
+        public MTGSet(string nameIn, DateTime dateIn, DateTime lastUpdateIn)
         {
-            SetName = NameIn;
-            SetDate = DateIn;
-            SetLastUpdate = LastUpdateIn;
+            SetName = nameIn;
+            SetDate = dateIn;
+            SetLastUpdate = lastUpdateIn;
         }
 
         public override string ToString()
         {
             return SetName;
         }
+
+        
     }
 }

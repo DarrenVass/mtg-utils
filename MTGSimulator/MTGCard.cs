@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MTGSimulator
+namespace MTGUtils
 {
     class MTGCard
     {
         string CardName;
 
-        public MTGCard(string NameIn)
+        public MTGCard(string nameIn)
         {
-            CardName = NameIn;
+            CardName = nameIn;
         }
 
         public override string ToString()
