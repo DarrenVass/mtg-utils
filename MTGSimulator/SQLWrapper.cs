@@ -38,28 +38,36 @@ namespace MTGUtils
         /* Will create the Set & Card tables if required */
         private void CreateTables()
         {
-            log.Debug("Creating Tables if required");
-            string createSetTable = "create table if not exists sets(name varchar(50), urlList varchar(256), lastUpdate Date, releaseDate Date);";
+            log.Debug("Creating Tables if required...");
+            string createSetTable = "CREATE TABLE IF NOT EXISTS mtgSets(setName varchar(256) NOT NULL PRIMARY KEY, urlList varchar(256)," +
+                                        "foilURLList varchar(256), lastUpdate date, releaseDate date);";
             SQLiteCommand cmd1 = new SQLiteCommand(createSetTable, MTGDB);
             cmd1.ExecuteNonQuery();
-
-            //string createCardTable = "create table cards(name varchar(100), url varchar(256), foilURL varchar(256), ";
-            //SQLiteCommand cmd2 = new SQLiteCommand(createCardTable, mtgDB);
-            //cmd2.ExecuteNonQuery();
         }
 
         /* Returns a List of the MTGSets from the DB */
         public List<MTGSet> GetSetList()
         {
             List<MTGSet> retSet = new List<MTGSet>();
-            string getSetList = "select * from sets";
-            SQLiteCommand cmd = new SQLiteCommand(getSetList, MTGDB);
-            SQLiteDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            string getSetList = "SELECT * FROM mtgSets";
+            try
             {
-                //MTGSet set = new MTGSet(rdr["name"], rdr["releaseDate"], rdr["lastUpdate"])); // TODO SQLDate -> DateTime
-                //set.URL = rdr["url"];
-                //retSet.Add(set);
+                SQLiteCommand cmd = new SQLiteCommand(getSetList, MTGDB);
+                SQLiteDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    DateTime rd = (DateTime)rdr["releaseDate"];
+                    DateTime lu = (DateTime)rdr["lastUpdate"];
+
+                    MTGSet set = new MTGSet(rdr["setName"].ToString(), rd, lu);
+                    set.URL = rdr["urlList"].ToString();
+                    set.FoilURL = rdr["foilURLList"].ToString();
+                    retSet.Add(set);
+                }
+            }
+            catch (Exception err)
+            {
+                log.Warn("GetSetList():", err);
             }
             return retSet;
         }
@@ -67,7 +75,37 @@ namespace MTGUtils
         /* For saving the updated set list */
         public void UpdateSetList(List<MTGSet> SetsIn)
         {
+            int sum = 0;
+            foreach (MTGSet set in SetsIn)
+            {
+                try
+                {
+                    SQLiteTransaction trn = MTGDB.BeginTransaction();
+                    using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
+                    {
+                        cmd.CommandText = "SELECT * FROM mtgSets WHERE setName=@Name";
+                        cmd.Parameters.AddWithValue("@Name", set.ToString());
+                        if (cmd.ExecuteScalar() == null)
+                        { // Does not Exist
+                            cmd.Parameters.Clear();
 
+                            cmd.CommandText = "INSERT INTO mtgSets (setName, urlList, foilURLList, lastUpdate, releaseDate) " +
+                                                "VALUES (@NAME, @URL, @FURL, @LU, @RD)";
+                            cmd.Parameters.AddWithValue("@URL", set.URL);
+                            cmd.Parameters.AddWithValue("@FURL", set.FoilURL);
+                            cmd.Parameters.AddWithValue("@LU", set.SetLastUpdate);
+                            cmd.Parameters.AddWithValue("@RD", set.SetDate);
+                            cmd.Parameters.AddWithValue("@Name", set.ToString());
+                            sum += cmd.ExecuteNonQuery();
+                        }
+                    }
+                    trn.Commit();
+                }
+                catch (Exception err)
+                {
+                    log.Error("Insert/Update Error:", err);
+                }
+            }
         }
     }
 }

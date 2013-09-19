@@ -7,16 +7,25 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+using log4net;
+
 namespace MTGUtils
 {
     public partial class MainWindow : Form
     {
         DataManager DM;
+        private readonly ILog log;
 
         public MainWindow()
         {
+            log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             DM = new DataManager();
             InitializeComponent();
+
+            if (DM.GetSets().Count > 0)
+            {
+                updateMTGSetsCheckedListBox();
+            }
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
@@ -30,7 +39,7 @@ namespace MTGUtils
             mtgSetsCheckedListBox.Items.Clear();
             foreach (MTGSet set in DM.GetSets())
             {
-                mtgSetsCheckedListBox.Items.Add(set);
+                mtgSetsCheckedListBox.Items.Add(set.ToString());
             }
             if (mtgSetsCheckedListBox.Items.Count == 0)
             { 
@@ -42,8 +51,7 @@ namespace MTGUtils
         private void updateSetsButton_Click(object sender, EventArgs e)
         {
             updateSetsButton.Enabled = false;
-            lblSetsStatus.Text = "Status: Getting Sets";
-            lblSetsStatus.Refresh();
+            UpdateStatusLabel("Status: Getting Sets");
 
             DM.UpdateSets();
             List<MTGSet> sets = DM.GetSets();
@@ -54,26 +62,89 @@ namespace MTGUtils
             }
             else
             {
-                mtgSetsCheckedListBox.BeginUpdate();
-                foreach (MTGSet set in sets)
-                {
-                    mtgSetsCheckedListBox.Items.Add(set.ToString());
-                }
-                mtgSetsCheckedListBox.EndUpdate();
-                mtgSetsCheckedListBox.Enabled = true;
+                updateMTGSetsCheckedListBox();
             }
 
-            lblSetsStatus.Text = "Status: Idle";
-            lblSetsStatus.Refresh();
+            UpdateStatusLabel("Status: Idle");
             updateSetsButton.Enabled = true;
+        }
+
+        
+
+        private void updateMTGSetsCheckedListBox()
+        {
+            List<MTGSet> sets = DM.GetSets();
+            mtgSetsCheckedListBox.BeginUpdate();
+            foreach (MTGSet set in sets)
+            {
+                mtgSetsCheckedListBox.Items.Add(set.ToString());
+            }
+            mtgSetsCheckedListBox.EndUpdate();
+            mtgSetsCheckedListBox.Enabled = true;
+
+            allMTGSetsButton.Enabled = sets.Count > 0;
+            standardMTGSetsButton.Enabled = sets.Count > 0;
+            modernMTGSetsButton.Enabled = sets.Count > 0;
+            recentMTGSetsButton.Enabled = sets.Count > 0;
         }
 
         private void allMTGSetsButton_Click(object sender, EventArgs e)
         {
+            /* All sets checked. */
             for (int i = 0; i < mtgSetsCheckedListBox.Items.Count; i++)
             {
                 mtgSetsCheckedListBox.SetItemChecked(i, true);
             }
+            UpdateStatusLabel("All: Complete");
         }
+
+        private void standardMTGSetsButton_Click(object sender, EventArgs e)
+        {
+            /* Sets within 2 years as a guesstimate. */
+        }
+
+        private void modernMTGSetsButton_Click(object sender, EventArgs e)
+        {
+            /* Sets since 8th edition */
+        }
+
+        private void recentMTGSetsButton_Click(object sender, EventArgs e)
+        {
+            /* Set with most recent release date */
+            DateTime mostRecent = DateTime.MinValue;
+            string setName = null;
+            foreach (MTGSet set in DM.GetSets())
+            {
+                if (mostRecent.CompareTo(set.SetDate) < 0)
+                {
+                    mostRecent = set.SetDate;
+                    setName = set.ToString();
+                }
+            }
+
+            foreach (int i in mtgSetsCheckedListBox.CheckedIndices)
+            {
+                mtgSetsCheckedListBox.SetItemChecked(i, false);
+            }
+
+            try
+            {
+                mtgSetsCheckedListBox.SetItemChecked(mtgSetsCheckedListBox.FindString(setName), true);
+                UpdateStatusLabel("Recent: Complete");
+            }
+            catch (ArgumentOutOfRangeException err)
+            {
+                log.Warn("Most Recent Set Error:", err);
+                UpdateStatusLabel("Recent: Error");
+            }
+        }
+
+        /* TODO Use A status bar at the bottom of the window, more professional looking. */
+        private void UpdateStatusLabel(string statusIn)
+        {
+            lblSetsStatus.Text = statusIn;
+            lblSetsStatus.Refresh();
+        }
+
     }
 }

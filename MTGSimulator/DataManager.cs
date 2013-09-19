@@ -40,6 +40,8 @@ namespace MTGUtils
             string ret = Fetcher.Fetch();
 
             Sets = _HTMLParser.ParseSets(ret);
+
+            _SQLWrapper.UpdateSetList(Sets);
         }
 
         public List<MTGSet> GetSets()

@@ -48,17 +48,38 @@ namespace MTGUtils
                             string setName = lineNode.InnerText;
                             string setURL = lineNode.FirstChild.GetAttributeValue("href", null);
 
-                            //SecondNode is Set Release Date
-                            lineNode = lineNode.NextSibling;
-                            string date = lineNode.FirstChild.WriteTo();
-                            DateTime setDate = new DateTime(Convert.ToInt16(date.Substring(6, 4)),
-                                                            Convert.ToInt16(date.Substring(0, 2)), 
-                                                            Convert.ToInt16(date.Substring(3, 2)));
-                            DateTime lastUpdate = new DateTime(); // Unset as we do not yet know last update time.
+                            if (setName.Contains("Foil"))
+                            { /* Foil Set, just add URL */
+                                string setNameWithoutFoil = setName.Replace(" (Foil)", "");
+                                bool isFound = false;
+                                foreach (MTGSet set in retSets)
+                                {
+                                    if (set.ToString().CompareTo(setNameWithoutFoil) == 0)
+                                    {
+                                        set.FoilURL = setURL; 
+                                        isFound = true;
+                                    }
+                                }
 
-                            MTGSet tempSet = new MTGSet(setName, setDate, lastUpdate);
-                            tempSet.URL = setURL;
-                            retSets.Add(tempSet);
+                                if (!isFound)
+                                {
+                                    log.Warn("Unable to find Non-Foil set for '" + setNameWithoutFoil + "'");
+                                }
+                            }
+                            else
+                            { /* New Set */
+                                //SecondNode is Set Release Date
+                                lineNode = lineNode.NextSibling;
+                                string date = lineNode.FirstChild.WriteTo();
+                                DateTime setDate = new DateTime(Convert.ToInt16(date.Substring(6, 4)),
+                                                                Convert.ToInt16(date.Substring(0, 2)),
+                                                                Convert.ToInt16(date.Substring(3, 2)));
+                                DateTime lastUpdate = new DateTime(); // Unset as we do not yet know last update time.
+
+                                MTGSet tempSet = new MTGSet(setName, setDate, lastUpdate);
+                                tempSet.URL = setURL;
+                                retSets.Add(tempSet);
+                            }
                         }
                     }
                     else

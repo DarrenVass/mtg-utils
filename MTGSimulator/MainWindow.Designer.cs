@@ -32,7 +32,8 @@
             this.mainTabs = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.Recent = new System.Windows.Forms.Button();
+            this.lblSetsStatus = new System.Windows.Forms.Label();
+            this.recentMTGSetsButton = new System.Windows.Forms.Button();
             this.modernMTGSetsButton = new System.Windows.Forms.Button();
             this.standardMTGSetsButton = new System.Windows.Forms.Button();
             this.mtgSetsCheckedListBox = new System.Windows.Forms.CheckedListBox();
@@ -43,7 +44,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.lblSetsStatus = new System.Windows.Forms.Label();
             this.mainTab.SuspendLayout();
             this.mainTabs.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -101,7 +101,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.lblSetsStatus);
-            this.groupBox2.Controls.Add(this.Recent);
+            this.groupBox2.Controls.Add(this.recentMTGSetsButton);
             this.groupBox2.Controls.Add(this.modernMTGSetsButton);
             this.groupBox2.Controls.Add(this.standardMTGSetsButton);
             this.groupBox2.Controls.Add(this.mtgSetsCheckedListBox);
@@ -114,14 +114,24 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "MTG Sets";
             // 
-            // Recent
+            // lblSetsStatus
             // 
-            this.Recent.Location = new System.Drawing.Point(70, 48);
-            this.Recent.Name = "Recent";
-            this.Recent.Size = new System.Drawing.Size(58, 23);
-            this.Recent.TabIndex = 8;
-            this.Recent.Text = "Recent";
-            this.Recent.UseVisualStyleBackColor = true;
+            this.lblSetsStatus.AutoSize = true;
+            this.lblSetsStatus.Location = new System.Drawing.Point(13, 121);
+            this.lblSetsStatus.Name = "lblSetsStatus";
+            this.lblSetsStatus.Size = new System.Drawing.Size(60, 13);
+            this.lblSetsStatus.TabIndex = 9;
+            this.lblSetsStatus.Text = "Status: Idle";
+            // 
+            // recentMTGSetsButton
+            // 
+            this.recentMTGSetsButton.Location = new System.Drawing.Point(70, 48);
+            this.recentMTGSetsButton.Name = "recentMTGSetsButton";
+            this.recentMTGSetsButton.Size = new System.Drawing.Size(58, 23);
+            this.recentMTGSetsButton.TabIndex = 8;
+            this.recentMTGSetsButton.Text = "Recent";
+            this.recentMTGSetsButton.UseVisualStyleBackColor = true;
+            this.recentMTGSetsButton.Click += new System.EventHandler(this.recentMTGSetsButton_Click);
             // 
             // modernMTGSetsButton
             // 
@@ -131,6 +141,7 @@
             this.modernMTGSetsButton.TabIndex = 7;
             this.modernMTGSetsButton.Text = "Modern";
             this.modernMTGSetsButton.UseVisualStyleBackColor = true;
+            this.modernMTGSetsButton.Click += new System.EventHandler(this.modernMTGSetsButton_Click);
             // 
             // standardMTGSetsButton
             // 
@@ -140,9 +151,11 @@
             this.standardMTGSetsButton.TabIndex = 6;
             this.standardMTGSetsButton.Text = "Standard";
             this.standardMTGSetsButton.UseVisualStyleBackColor = true;
+            this.standardMTGSetsButton.Click += new System.EventHandler(this.standardMTGSetsButton_Click);
             // 
             // mtgSetsCheckedListBox
             // 
+            this.mtgSetsCheckedListBox.CheckOnClick = true;
             this.mtgSetsCheckedListBox.Location = new System.Drawing.Point(134, 16);
             this.mtgSetsCheckedListBox.Name = "mtgSetsCheckedListBox";
             this.mtgSetsCheckedListBox.Size = new System.Drawing.Size(169, 124);
@@ -233,15 +246,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "This Program created by \"JollyGuy\"";
             // 
-            // lblSetsStatus
-            // 
-            this.lblSetsStatus.AutoSize = true;
-            this.lblSetsStatus.Location = new System.Drawing.Point(13, 121);
-            this.lblSetsStatus.Name = "lblSetsStatus";
-            this.lblSetsStatus.Size = new System.Drawing.Size(60, 13);
-            this.lblSetsStatus.TabIndex = 9;
-            this.lblSetsStatus.Text = "Status: Idle";
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -279,7 +283,7 @@
         private System.Windows.Forms.Button allMTGSetsButton;
         private System.Windows.Forms.Button updateSetsButton;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button Recent;
+        private System.Windows.Forms.Button recentMTGSetsButton;
         private System.Windows.Forms.Button modernMTGSetsButton;
         private System.Windows.Forms.Button standardMTGSetsButton;
         private System.Windows.Forms.Label lblSetsStatus;
