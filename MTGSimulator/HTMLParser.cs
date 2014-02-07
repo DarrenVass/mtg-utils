@@ -71,9 +71,10 @@ namespace MTGUtils
                                 //SecondNode is Set Release Date
                                 lineNode = lineNode.NextSibling;
                                 string date = lineNode.FirstChild.WriteTo();
-                                DateTime setDate = new DateTime(Convert.ToInt16(date.Substring(6, 4)),
-                                                                Convert.ToInt16(date.Substring(0, 2)),
-                                                                Convert.ToInt16(date.Substring(3, 2)));
+                                string[] dates = date.Split('/');
+                                DateTime setDate = new DateTime(Convert.ToInt16(dates[2]),
+                                                                Convert.ToInt16(dates[0]),
+                                                                Convert.ToInt16(dates[1]));
                                 DateTime lastUpdate = new DateTime(); // Unset as we do not yet know last update time.
 
                                 MTGSet tempSet = new MTGSet(setName, setDate, lastUpdate);

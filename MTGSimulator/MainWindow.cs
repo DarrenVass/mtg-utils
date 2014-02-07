@@ -75,10 +75,14 @@ namespace MTGUtils
         {
             List<MTGSet> sets = DM.GetSets();
             mtgSetsCheckedListBox.BeginUpdate();
+            mtgSetsGraphListBox.BeginUpdate();
             foreach (MTGSet set in sets)
             {
+                mtgSetsGraphListBox.Items.Add(set.ToString());
                 mtgSetsCheckedListBox.Items.Add(set.ToString());
             }
+            mtgSetsGraphListBox.EndUpdate();
+            mtgSetsGraphListBox.Enabled = true;
             mtgSetsCheckedListBox.EndUpdate();
             mtgSetsCheckedListBox.Enabled = true;
 
@@ -90,6 +94,8 @@ namespace MTGUtils
 
         private void allMTGSetsButton_Click(object sender, EventArgs e)
         {
+            UnselectAllMTGSetsCheckedListBox();
+
             /* All sets checked. */
             for (int i = 0; i < mtgSetsCheckedListBox.Items.Count; i++)
             {
@@ -98,14 +104,59 @@ namespace MTGUtils
             UpdateStatusLabel("All: Complete");
         }
 
+        private void fromDateMTGSetsButtonHelper(DateTime fromDate)
+        {
+            List<MTGSet> currentSets = new List<MTGSet>();
+            foreach (MTGSet set in DM.GetSets())
+            {
+                if (set.SetDate.CompareTo(fromDate) > 0)
+                {
+                    currentSets.Add(set);
+                }
+            }
+
+            UnselectAllMTGSetsCheckedListBox();
+
+            try
+            {
+                foreach (MTGSet set in currentSets)
+                {
+                    mtgSetsCheckedListBox.SetItemChecked(mtgSetsCheckedListBox.FindString(set.ToString()), true);
+                }
+
+                UpdateStatusLabel("Certain Sets: Complete");
+            }
+            catch (ArgumentOutOfRangeException err)
+            {
+                log.Warn("fromDateMTGSetsButtonHelper Error:", err);
+                UpdateStatusLabel("Certain Sets: Error");
+            }
+        }
+
         private void standardMTGSetsButton_Click(object sender, EventArgs e)
         {
             /* Sets within 2 years as a guesstimate. */
+            DateTime twoYearsAgo = DateTime.Today;
+            twoYearsAgo.AddYears(-2);
+
+            fromDateMTGSetsButtonHelper(twoYearsAgo);
         }
 
         private void modernMTGSetsButton_Click(object sender, EventArgs e)
         {
             /* Sets since 8th edition */
+            List<MTGSet> sets = DM.GetSets();
+            DateTime eighthDate = DateTime.Today;
+            foreach(MTGSet set in sets)
+            {
+                if(set.ToString().CompareTo("8th Edition") == 0)
+                {
+                    eighthDate = set.SetDate;
+                    break;
+                }
+            }
+            
+            fromDateMTGSetsButtonHelper(eighthDate);
         }
 
         private void recentMTGSetsButton_Click(object sender, EventArgs e)
@@ -122,21 +173,7 @@ namespace MTGUtils
                 }
             }
 
-            foreach (int i in mtgSetsCheckedListBox.CheckedIndices)
-            {
-                mtgSetsCheckedListBox.SetItemChecked(i, false);
-            }
-
-            try
-            {
-                mtgSetsCheckedListBox.SetItemChecked(mtgSetsCheckedListBox.FindString(setName), true);
-                UpdateStatusLabel("Recent: Complete");
-            }
-            catch (ArgumentOutOfRangeException err)
-            {
-                log.Warn("Most Recent Set Error:", err);
-                UpdateStatusLabel("Recent: Error");
-            }
+            fromDateMTGSetsButtonHelper(mostRecent);
         }
 
         /* TODO Use A status bar at the bottom of the window, more professional looking. */
@@ -144,6 +181,15 @@ namespace MTGUtils
         {
             lblSetsStatus.Text = statusIn;
             lblSetsStatus.Refresh();
+        }
+
+        /* Uncheck all boxes in the mtgSetsCheckedListBOx */
+        private void UnselectAllMTGSetsCheckedListBox()
+        {
+            foreach (int i in mtgSetsCheckedListBox.CheckedIndices)
+            {
+                mtgSetsCheckedListBox.SetItemChecked(i, false);
+            }
         }
 
     }

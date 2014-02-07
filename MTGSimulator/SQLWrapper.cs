@@ -38,7 +38,6 @@ namespace MTGUtils
         /* Will create the Set & Card tables if required */
         private void CreateTables()
         {
-            log.Debug("Creating Tables if required...");
             string createSetTable = "CREATE TABLE IF NOT EXISTS mtgSets(setName varchar(256) NOT NULL PRIMARY KEY, urlList varchar(256)," +
                                         "foilURLList varchar(256), lastUpdate date, releaseDate date);";
             SQLiteCommand cmd1 = new SQLiteCommand(createSetTable, MTGDB);

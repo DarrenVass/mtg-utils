@@ -44,14 +44,24 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.mtgSetsGraphListBox = new System.Windows.Forms.ListBox();
+            this.mtgCardsGraphListBox = new System.Windows.Forms.ListBox();
             this.mainTab.SuspendLayout();
             this.mainTabs.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTab
@@ -80,7 +90,9 @@
             // 
             // splitContainer1
             // 
+            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(3, 3);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
@@ -94,6 +106,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.BackColor = System.Drawing.Color.Silver;
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
             this.splitContainer1.Size = new System.Drawing.Size(1050, 730);
             this.splitContainer1.SplitterDistance = 148;
             this.splitContainer1.TabIndex = 0;
@@ -246,6 +259,58 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "This Program created by \"JollyGuy\"";
             // 
+            // splitContainer2
+            // 
+            this.splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.IsSplitterFixed = true;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.splitContainer3);
+            this.splitContainer2.Size = new System.Drawing.Size(1050, 578);
+            this.splitContainer2.SplitterDistance = 232;
+            this.splitContainer2.TabIndex = 0;
+            // 
+            // splitContainer3
+            // 
+            this.splitContainer3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Name = "splitContainer3";
+            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.mtgSetsGraphListBox);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.mtgCardsGraphListBox);
+            this.splitContainer3.Size = new System.Drawing.Size(232, 578);
+            this.splitContainer3.SplitterDistance = 261;
+            this.splitContainer3.TabIndex = 0;
+            // 
+            // mtgSetsGraphListBox
+            // 
+            this.mtgSetsGraphListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mtgSetsGraphListBox.FormattingEnabled = true;
+            this.mtgSetsGraphListBox.Location = new System.Drawing.Point(0, 0);
+            this.mtgSetsGraphListBox.Name = "mtgSetsGraphListBox";
+            this.mtgSetsGraphListBox.Size = new System.Drawing.Size(230, 251);
+            this.mtgSetsGraphListBox.TabIndex = 0;
+            // 
+            // mtgCardsGraphListBox
+            // 
+            this.mtgCardsGraphListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mtgCardsGraphListBox.FormattingEnabled = true;
+            this.mtgCardsGraphListBox.Location = new System.Drawing.Point(0, 0);
+            this.mtgCardsGraphListBox.Name = "mtgCardsGraphListBox";
+            this.mtgCardsGraphListBox.Size = new System.Drawing.Size(230, 303);
+            this.mtgCardsGraphListBox.TabIndex = 0;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -258,6 +323,7 @@
             this.mainTab.ResumeLayout(false);
             this.mainTabs.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -265,6 +331,11 @@
             this.tabPage2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.ResumeLayout(false);
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            this.splitContainer3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -287,6 +358,10 @@
         private System.Windows.Forms.Button modernMTGSetsButton;
         private System.Windows.Forms.Button standardMTGSetsButton;
         private System.Windows.Forms.Label lblSetsStatus;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.SplitContainer splitContainer3;
+        private System.Windows.Forms.ListBox mtgSetsGraphListBox;
+        private System.Windows.Forms.ListBox mtgCardsGraphListBox;
     }
 }
 
