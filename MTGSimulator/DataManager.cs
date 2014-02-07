@@ -42,6 +42,8 @@ namespace MTGUtils
             Sets = _HTMLParser.ParseSets(ret);
 
             _SQLWrapper.UpdateSetList(Sets);
+
+            Sets = Sets.OrderBy(set => set.ToString()).ToList();
         }
 
         public List<MTGSet> GetSets()

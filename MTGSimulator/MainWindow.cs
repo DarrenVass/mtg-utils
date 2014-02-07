@@ -36,11 +36,7 @@ namespace MTGUtils
                 mtgPriceSourceCheckListBox.SetItemChecked(i, true);
             }
 
-            mtgSetsCheckedListBox.Items.Clear();
-            foreach (MTGSet set in DM.GetSets())
-            {
-                mtgSetsCheckedListBox.Items.Add(set.ToString());
-            }
+            updateMTGSetsCheckedListBox();
             if (mtgSetsCheckedListBox.Items.Count == 0)
             { 
                 mtgSetsCheckedListBox.Items.Add("Need to \"Update Sets\"");
@@ -55,7 +51,7 @@ namespace MTGUtils
 
             DM.UpdateSets();
             List<MTGSet> sets = DM.GetSets();
-            mtgSetsCheckedListBox.Items.Clear();
+            
             if (sets.Count == 0)
             {
                 mtgSetsCheckedListBox.Items.Add("Updating sets failed. See debug log");
@@ -76,6 +72,8 @@ namespace MTGUtils
             List<MTGSet> sets = DM.GetSets();
             mtgSetsCheckedListBox.BeginUpdate();
             mtgSetsGraphListBox.BeginUpdate();
+            mtgSetsCheckedListBox.Items.Clear();
+            mtgSetsGraphListBox.Items.Clear();
             foreach (MTGSet set in sets)
             {
                 mtgSetsGraphListBox.Items.Add(set.ToString());
@@ -107,20 +105,23 @@ namespace MTGUtils
         private void fromDateMTGSetsButtonHelper(DateTime fromDate)
         {
             List<MTGSet> currentSets = new List<MTGSet>();
+            log.Debug(fromDate.ToString());
             foreach (MTGSet set in DM.GetSets())
             {
-                if (set.SetDate.CompareTo(fromDate) > 0)
+                if (set.SetDate.CompareTo(fromDate) >= 0)
                 {
                     currentSets.Add(set);
                 }
             }
 
             UnselectAllMTGSetsCheckedListBox();
+            
 
             try
             {
                 foreach (MTGSet set in currentSets)
                 {
+                    log.Debug(set.ToString());
                     mtgSetsCheckedListBox.SetItemChecked(mtgSetsCheckedListBox.FindString(set.ToString()), true);
                 }
 
@@ -136,9 +137,8 @@ namespace MTGUtils
         private void standardMTGSetsButton_Click(object sender, EventArgs e)
         {
             /* Sets within 2 years as a guesstimate. */
-            DateTime twoYearsAgo = DateTime.Today;
-            twoYearsAgo.AddYears(-2);
-
+            DateTime twoYearsAgo = DateTime.Now.AddYears(-2);
+ 
             fromDateMTGSetsButtonHelper(twoYearsAgo);
         }
 
@@ -149,9 +149,10 @@ namespace MTGUtils
             DateTime eighthDate = DateTime.Today;
             foreach(MTGSet set in sets)
             {
-                if(set.ToString().CompareTo("8th Edition") == 0)
+                if(set.ToString().CompareTo("8th Edition ") == 0)
                 {
                     eighthDate = set.SetDate;
+                    log.Debug("Eigth date is " + eighthDate.ToString());
                     break;
                 }
             }
