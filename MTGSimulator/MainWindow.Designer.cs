@@ -30,38 +30,47 @@
         {
             this.mainTab = new System.Windows.Forms.TabControl();
             this.mainTabs = new System.Windows.Forms.TabPage();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.windowStatusStrip = new System.Windows.Forms.StatusStrip();
+            this.splitContainerMain = new System.Windows.Forms.SplitContainer();
+            this.splitContainerTopMain = new System.Windows.Forms.SplitContainer();
+            this.splitContainerTopSourcesSetsCheckBoxes = new System.Windows.Forms.SplitContainer();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.mtgPriceSourceCheckListBox = new System.Windows.Forms.CheckedListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.lblSetsStatus = new System.Windows.Forms.Label();
             this.recentMTGSetsButton = new System.Windows.Forms.Button();
             this.modernMTGSetsButton = new System.Windows.Forms.Button();
             this.standardMTGSetsButton = new System.Windows.Forms.Button();
             this.mtgSetsCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.updateSetsButton = new System.Windows.Forms.Button();
             this.allMTGSetsButton = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.mtgPriceSourceCheckListBox = new System.Windows.Forms.CheckedListBox();
+            this.splitContainerBottomMain = new System.Windows.Forms.SplitContainer();
+            this.splitContainerGraphSetsCards = new System.Windows.Forms.SplitContainer();
+            this.mtgSetsGraphListBox = new System.Windows.Forms.ListBox();
+            this.mtgCardsGraphListBox = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
-            this.mtgSetsGraphListBox = new System.Windows.Forms.ListBox();
-            this.mtgCardsGraphListBox = new System.Windows.Forms.ListBox();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.mainTab.SuspendLayout();
             this.mainTabs.SuspendLayout();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.windowStatusStrip.SuspendLayout();
+            this.splitContainerMain.Panel1.SuspendLayout();
+            this.splitContainerMain.Panel2.SuspendLayout();
+            this.splitContainerMain.SuspendLayout();
+            this.splitContainerTopMain.Panel2.SuspendLayout();
+            this.splitContainerTopMain.SuspendLayout();
+            this.splitContainerTopSourcesSetsCheckBoxes.Panel1.SuspendLayout();
+            this.splitContainerTopSourcesSetsCheckBoxes.Panel2.SuspendLayout();
+            this.splitContainerTopSourcesSetsCheckBoxes.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
+            this.splitContainerBottomMain.Panel1.SuspendLayout();
+            this.splitContainerBottomMain.SuspendLayout();
+            this.splitContainerGraphSetsCards.Panel1.SuspendLayout();
+            this.splitContainerGraphSetsCards.Panel2.SuspendLayout();
+            this.splitContainerGraphSetsCards.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
-            this.splitContainer3.Panel1.SuspendLayout();
-            this.splitContainer3.Panel2.SuspendLayout();
-            this.splitContainer3.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainTab
@@ -73,68 +82,138 @@
             this.mainTab.Location = new System.Drawing.Point(0, 0);
             this.mainTab.Name = "mainTab";
             this.mainTab.SelectedIndex = 0;
-            this.mainTab.Size = new System.Drawing.Size(1064, 762);
+            this.mainTab.Size = new System.Drawing.Size(1064, 778);
             this.mainTab.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.mainTab.TabIndex = 0;
             // 
             // mainTabs
             // 
-            this.mainTabs.Controls.Add(this.splitContainer1);
+            this.mainTabs.Controls.Add(this.windowStatusStrip);
+            this.mainTabs.Controls.Add(this.splitContainerMain);
             this.mainTabs.Location = new System.Drawing.Point(4, 22);
             this.mainTabs.Name = "mainTabs";
             this.mainTabs.Padding = new System.Windows.Forms.Padding(3);
-            this.mainTabs.Size = new System.Drawing.Size(1056, 736);
+            this.mainTabs.Size = new System.Drawing.Size(1056, 752);
             this.mainTabs.TabIndex = 0;
             this.mainTabs.Text = "Price Analyzer";
             this.mainTabs.UseVisualStyleBackColor = true;
             // 
-            // splitContainer1
+            // windowStatusStrip
             // 
-            this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(3, 3);
-            this.splitContainer1.Name = "splitContainer1";
-            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.windowStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel});
+            this.windowStatusStrip.Location = new System.Drawing.Point(3, 727);
+            this.windowStatusStrip.Name = "windowStatusStrip";
+            this.windowStatusStrip.Size = new System.Drawing.Size(1050, 22);
+            this.windowStatusStrip.TabIndex = 1;
+            this.windowStatusStrip.Text = "statusStrip1";
             // 
-            // splitContainer1.Panel1
+            // splitContainerMain
             // 
-            this.splitContainer1.Panel1.BackColor = System.Drawing.Color.DarkGray;
-            this.splitContainer1.Panel1.Controls.Add(this.groupBox2);
-            this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
+            this.splitContainerMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainerMain.IsSplitterFixed = true;
+            this.splitContainerMain.Location = new System.Drawing.Point(3, 3);
+            this.splitContainerMain.Name = "splitContainerMain";
+            this.splitContainerMain.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
-            // splitContainer1.Panel2
+            // splitContainerMain.Panel1
             // 
-            this.splitContainer1.Panel2.BackColor = System.Drawing.Color.Silver;
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1050, 730);
-            this.splitContainer1.SplitterDistance = 148;
-            this.splitContainer1.TabIndex = 0;
+            this.splitContainerMain.Panel1.BackColor = System.Drawing.Color.DarkGray;
+            this.splitContainerMain.Panel1.Controls.Add(this.splitContainerTopMain);
+            // 
+            // splitContainerMain.Panel2
+            // 
+            this.splitContainerMain.Panel2.BackColor = System.Drawing.Color.Silver;
+            this.splitContainerMain.Panel2.Controls.Add(this.splitContainerBottomMain);
+            this.splitContainerMain.Size = new System.Drawing.Size(1050, 746);
+            this.splitContainerMain.SplitterDistance = 151;
+            this.splitContainerMain.TabIndex = 0;
+            // 
+            // splitContainerTopMain
+            // 
+            this.splitContainerTopMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerTopMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.splitContainerTopMain.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerTopMain.Name = "splitContainerTopMain";
+            // 
+            // splitContainerTopMain.Panel2
+            // 
+            this.splitContainerTopMain.Panel2.Controls.Add(this.splitContainerTopSourcesSetsCheckBoxes);
+            this.splitContainerTopMain.Size = new System.Drawing.Size(1048, 149);
+            this.splitContainerTopMain.SplitterDistance = 522;
+            this.splitContainerTopMain.TabIndex = 8;
+            // 
+            // splitContainerTopSourcesSetsCheckBoxes
+            // 
+            this.splitContainerTopSourcesSetsCheckBoxes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerTopSourcesSetsCheckBoxes.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainerTopSourcesSetsCheckBoxes.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerTopSourcesSetsCheckBoxes.Name = "splitContainerTopSourcesSetsCheckBoxes";
+            // 
+            // splitContainerTopSourcesSetsCheckBoxes.Panel1
+            // 
+            this.splitContainerTopSourcesSetsCheckBoxes.Panel1.Controls.Add(this.groupBox1);
+            // 
+            // splitContainerTopSourcesSetsCheckBoxes.Panel2
+            // 
+            this.splitContainerTopSourcesSetsCheckBoxes.Panel2.Controls.Add(this.groupBox2);
+            this.splitContainerTopSourcesSetsCheckBoxes.Size = new System.Drawing.Size(522, 149);
+            this.splitContainerTopSourcesSetsCheckBoxes.SplitterDistance = 208;
+            this.splitContainerTopSourcesSetsCheckBoxes.TabIndex = 0;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.mtgPriceSourceCheckListBox);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(0, 0);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(208, 149);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Price Sources from mtgprice.com";
+            // 
+            // mtgPriceSourceCheckListBox
+            // 
+            this.mtgPriceSourceCheckListBox.BackColor = System.Drawing.SystemColors.Window;
+            this.mtgPriceSourceCheckListBox.CheckOnClick = true;
+            this.mtgPriceSourceCheckListBox.FormattingEnabled = true;
+            this.mtgPriceSourceCheckListBox.Items.AddRange(new object[] {
+            "ABUGames",
+            "Amazon US",
+            "Cardhaus",
+            "CCG House",
+            "ChannelFireball",
+            "Ebay",
+            "Hotsauce Games",
+            "Pastimes",
+            "Starcity",
+            "StrikeZone Online",
+            "SuperGames Inc.",
+            "TCGPlayer LOW",
+            "Troll and Toad"});
+            this.mtgPriceSourceCheckListBox.Location = new System.Drawing.Point(6, 14);
+            this.mtgPriceSourceCheckListBox.Name = "mtgPriceSourceCheckListBox";
+            this.mtgPriceSourceCheckListBox.Size = new System.Drawing.Size(178, 124);
+            this.mtgPriceSourceCheckListBox.Sorted = true;
+            this.mtgPriceSourceCheckListBox.TabIndex = 0;
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.lblSetsStatus);
             this.groupBox2.Controls.Add(this.recentMTGSetsButton);
             this.groupBox2.Controls.Add(this.modernMTGSetsButton);
             this.groupBox2.Controls.Add(this.standardMTGSetsButton);
             this.groupBox2.Controls.Add(this.mtgSetsCheckedListBox);
             this.groupBox2.Controls.Add(this.updateSetsButton);
             this.groupBox2.Controls.Add(this.allMTGSetsButton);
-            this.groupBox2.Location = new System.Drawing.Point(199, 3);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox2.Location = new System.Drawing.Point(0, 0);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(309, 142);
-            this.groupBox2.TabIndex = 7;
+            this.groupBox2.Size = new System.Drawing.Size(310, 149);
+            this.groupBox2.TabIndex = 8;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "MTG Sets";
-            // 
-            // lblSetsStatus
-            // 
-            this.lblSetsStatus.AutoSize = true;
-            this.lblSetsStatus.Location = new System.Drawing.Point(13, 121);
-            this.lblSetsStatus.Name = "lblSetsStatus";
-            this.lblSetsStatus.Size = new System.Drawing.Size(60, 13);
-            this.lblSetsStatus.TabIndex = 9;
-            this.lblSetsStatus.Text = "Status: Idle";
             // 
             // recentMTGSetsButton
             // 
@@ -194,40 +273,59 @@
             this.allMTGSetsButton.UseVisualStyleBackColor = true;
             this.allMTGSetsButton.Click += new System.EventHandler(this.allMTGSetsButton_Click);
             // 
-            // groupBox1
+            // splitContainerBottomMain
             // 
-            this.groupBox1.Controls.Add(this.mtgPriceSourceCheckListBox);
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(190, 140);
-            this.groupBox1.TabIndex = 6;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Price Sources from mtgprice.com";
+            this.splitContainerBottomMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainerBottomMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerBottomMain.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainerBottomMain.IsSplitterFixed = true;
+            this.splitContainerBottomMain.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerBottomMain.Name = "splitContainerBottomMain";
             // 
-            // mtgPriceSourceCheckListBox
+            // splitContainerBottomMain.Panel1
             // 
-            this.mtgPriceSourceCheckListBox.BackColor = System.Drawing.SystemColors.Window;
-            this.mtgPriceSourceCheckListBox.CheckOnClick = true;
-            this.mtgPriceSourceCheckListBox.FormattingEnabled = true;
-            this.mtgPriceSourceCheckListBox.Items.AddRange(new object[] {
-            "ABUGames",
-            "Amazon US",
-            "Cardhaus",
-            "CCG House",
-            "ChannelFireball",
-            "Ebay",
-            "Hotsauce Games",
-            "Pastimes",
-            "Starcity",
-            "StrikeZone Online",
-            "SuperGames Inc.",
-            "TCGPlayer LOW",
-            "Troll and Toad"});
-            this.mtgPriceSourceCheckListBox.Location = new System.Drawing.Point(6, 14);
-            this.mtgPriceSourceCheckListBox.Name = "mtgPriceSourceCheckListBox";
-            this.mtgPriceSourceCheckListBox.Size = new System.Drawing.Size(178, 124);
-            this.mtgPriceSourceCheckListBox.Sorted = true;
-            this.mtgPriceSourceCheckListBox.TabIndex = 0;
+            this.splitContainerBottomMain.Panel1.Controls.Add(this.splitContainerGraphSetsCards);
+            this.splitContainerBottomMain.Size = new System.Drawing.Size(1050, 591);
+            this.splitContainerBottomMain.SplitterDistance = 232;
+            this.splitContainerBottomMain.TabIndex = 0;
+            // 
+            // splitContainerGraphSetsCards
+            // 
+            this.splitContainerGraphSetsCards.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.splitContainerGraphSetsCards.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerGraphSetsCards.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerGraphSetsCards.Name = "splitContainerGraphSetsCards";
+            this.splitContainerGraphSetsCards.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainerGraphSetsCards.Panel1
+            // 
+            this.splitContainerGraphSetsCards.Panel1.Controls.Add(this.mtgSetsGraphListBox);
+            // 
+            // splitContainerGraphSetsCards.Panel2
+            // 
+            this.splitContainerGraphSetsCards.Panel2.Controls.Add(this.mtgCardsGraphListBox);
+            this.splitContainerGraphSetsCards.Size = new System.Drawing.Size(232, 591);
+            this.splitContainerGraphSetsCards.SplitterDistance = 266;
+            this.splitContainerGraphSetsCards.TabIndex = 0;
+            // 
+            // mtgSetsGraphListBox
+            // 
+            this.mtgSetsGraphListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mtgSetsGraphListBox.FormattingEnabled = true;
+            this.mtgSetsGraphListBox.Location = new System.Drawing.Point(0, 0);
+            this.mtgSetsGraphListBox.Name = "mtgSetsGraphListBox";
+            this.mtgSetsGraphListBox.Size = new System.Drawing.Size(230, 264);
+            this.mtgSetsGraphListBox.TabIndex = 0;
+            this.mtgSetsGraphListBox.SelectedIndexChanged += new System.EventHandler(this.mtgSetsGraphListBox_SelectedIndexChanged);
+            // 
+            // mtgCardsGraphListBox
+            // 
+            this.mtgCardsGraphListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mtgCardsGraphListBox.FormattingEnabled = true;
+            this.mtgCardsGraphListBox.Location = new System.Drawing.Point(0, 0);
+            this.mtgCardsGraphListBox.Name = "mtgCardsGraphListBox";
+            this.mtgCardsGraphListBox.Size = new System.Drawing.Size(230, 316);
+            this.mtgCardsGraphListBox.TabIndex = 0;
             // 
             // tabPage2
             // 
@@ -235,7 +333,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1056, 736);
+            this.tabPage2.Size = new System.Drawing.Size(1056, 752);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "About";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -247,7 +345,7 @@
             this.panel1.ForeColor = System.Drawing.SystemColors.AppWorkspace;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1050, 730);
+            this.panel1.Size = new System.Drawing.Size(1050, 746);
             this.panel1.TabIndex = 0;
             // 
             // label1
@@ -259,83 +357,47 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "This Program created by \"JollyGuy\"";
             // 
-            // splitContainer2
+            // toolStripStatusLabel
             // 
-            this.splitContainer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.IsSplitterFixed = true;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.splitContainer3);
-            this.splitContainer2.Size = new System.Drawing.Size(1050, 578);
-            this.splitContainer2.SplitterDistance = 232;
-            this.splitContainer2.TabIndex = 0;
-            // 
-            // splitContainer3
-            // 
-            this.splitContainer3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer3.Name = "splitContainer3";
-            this.splitContainer3.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            // 
-            // splitContainer3.Panel1
-            // 
-            this.splitContainer3.Panel1.Controls.Add(this.mtgSetsGraphListBox);
-            // 
-            // splitContainer3.Panel2
-            // 
-            this.splitContainer3.Panel2.Controls.Add(this.mtgCardsGraphListBox);
-            this.splitContainer3.Size = new System.Drawing.Size(232, 578);
-            this.splitContainer3.SplitterDistance = 261;
-            this.splitContainer3.TabIndex = 0;
-            // 
-            // mtgSetsGraphListBox
-            // 
-            this.mtgSetsGraphListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mtgSetsGraphListBox.FormattingEnabled = true;
-            this.mtgSetsGraphListBox.Location = new System.Drawing.Point(0, 0);
-            this.mtgSetsGraphListBox.Name = "mtgSetsGraphListBox";
-            this.mtgSetsGraphListBox.Size = new System.Drawing.Size(230, 251);
-            this.mtgSetsGraphListBox.TabIndex = 0;
-            // 
-            // mtgCardsGraphListBox
-            // 
-            this.mtgCardsGraphListBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mtgCardsGraphListBox.FormattingEnabled = true;
-            this.mtgCardsGraphListBox.Location = new System.Drawing.Point(0, 0);
-            this.mtgCardsGraphListBox.Name = "mtgCardsGraphListBox";
-            this.mtgCardsGraphListBox.Size = new System.Drawing.Size(230, 303);
-            this.mtgCardsGraphListBox.TabIndex = 0;
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(1035, 17);
+            this.toolStripStatusLabel.Spring = true;
+            this.toolStripStatusLabel.Text = "Status: Idle";
+            this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1064, 762);
+            this.ClientSize = new System.Drawing.Size(1064, 778);
             this.Controls.Add(this.mainTab);
             this.Name = "MainWindow";
             this.Text = "Jolly MTG";
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.mainTab.ResumeLayout(false);
             this.mainTabs.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.mainTabs.PerformLayout();
+            this.windowStatusStrip.ResumeLayout(false);
+            this.windowStatusStrip.PerformLayout();
+            this.splitContainerMain.Panel1.ResumeLayout(false);
+            this.splitContainerMain.Panel2.ResumeLayout(false);
+            this.splitContainerMain.ResumeLayout(false);
+            this.splitContainerTopMain.Panel2.ResumeLayout(false);
+            this.splitContainerTopMain.ResumeLayout(false);
+            this.splitContainerTopSourcesSetsCheckBoxes.Panel1.ResumeLayout(false);
+            this.splitContainerTopSourcesSetsCheckBoxes.Panel2.ResumeLayout(false);
+            this.splitContainerTopSourcesSetsCheckBoxes.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.splitContainerBottomMain.Panel1.ResumeLayout(false);
+            this.splitContainerBottomMain.ResumeLayout(false);
+            this.splitContainerGraphSetsCards.Panel1.ResumeLayout(false);
+            this.splitContainerGraphSetsCards.Panel2.ResumeLayout(false);
+            this.splitContainerGraphSetsCards.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.ResumeLayout(false);
-            this.splitContainer3.Panel1.ResumeLayout(false);
-            this.splitContainer3.Panel2.ResumeLayout(false);
-            this.splitContainer3.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -345,23 +407,26 @@
         private System.Windows.Forms.TabControl mainTab;
         private System.Windows.Forms.TabPage mainTabs;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.CheckedListBox mtgPriceSourceCheckListBox;
-        private System.Windows.Forms.CheckedListBox mtgSetsCheckedListBox;
+        private System.Windows.Forms.SplitContainer splitContainerBottomMain;
+        private System.Windows.Forms.SplitContainer splitContainerGraphSetsCards;
+        private System.Windows.Forms.ListBox mtgSetsGraphListBox;
+        private System.Windows.Forms.ListBox mtgCardsGraphListBox;
+        private System.Windows.Forms.StatusStrip windowStatusStrip;
+        private System.Windows.Forms.SplitContainer splitContainerTopMain;
+        private System.Windows.Forms.SplitContainer splitContainerTopSourcesSetsCheckBoxes;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button allMTGSetsButton;
-        private System.Windows.Forms.Button updateSetsButton;
+        private System.Windows.Forms.CheckedListBox mtgPriceSourceCheckListBox;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button recentMTGSetsButton;
         private System.Windows.Forms.Button modernMTGSetsButton;
         private System.Windows.Forms.Button standardMTGSetsButton;
-        private System.Windows.Forms.Label lblSetsStatus;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.SplitContainer splitContainer3;
-        private System.Windows.Forms.ListBox mtgSetsGraphListBox;
-        private System.Windows.Forms.ListBox mtgCardsGraphListBox;
+        private System.Windows.Forms.CheckedListBox mtgSetsCheckedListBox;
+        private System.Windows.Forms.Button updateSetsButton;
+        private System.Windows.Forms.Button allMTGSetsButton;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
     }
 }
 

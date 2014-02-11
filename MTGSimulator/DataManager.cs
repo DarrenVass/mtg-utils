@@ -18,6 +18,7 @@ namespace MTGUtils
 
         private readonly ILog log;
         private string mainURL = "http://www.mtgprice.com/magic-the-gathering-prices.jsp";
+        private string startURL = "http://www.mtgprice.com";
 
         public DataManager()
         {
@@ -34,7 +35,7 @@ namespace MTGUtils
         }
 
         /* Download Set List, Parse It, then save it. */
-        public void UpdateSets()
+        public void UpdateSetURLs()
         {
             URLFetcher Fetcher = new URLFetcher(mainURL);
             string ret = Fetcher.Fetch();
@@ -44,6 +45,34 @@ namespace MTGUtils
             _SQLWrapper.UpdateSetList(Sets);
 
             Sets = Sets.OrderBy(set => set.ToString()).ToList();
+        }
+
+        public void UpdateURLsForSet(string setName)
+        {
+            string setURL = null;
+            foreach (MTGSet set in Sets)
+            {
+                if (set.SetName.CompareTo(setName) == 0)
+                {
+                    setURL = set.URL;
+                    break;
+                }
+            }
+
+            if (setURL == null)
+            {
+                log.Error("Could not find SetURL for set named '" + setName + "'");
+                return;
+            }
+
+            log.Debug("Updating CardURLs for : " + startURL + setURL);
+            URLFetcher Fetcher = new URLFetcher(startURL + setURL);
+            string ret = Fetcher.Fetch();
+
+            List<string> CardURLs;
+            CardURLs = _HTMLParser.ParseCardURLs(ret);
+
+
         }
 
         public List<MTGSet> GetSets()

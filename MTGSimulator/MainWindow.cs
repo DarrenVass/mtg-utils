@@ -49,7 +49,7 @@ namespace MTGUtils
             updateSetsButton.Enabled = false;
             UpdateStatusLabel("Status: Getting Sets");
 
-            DM.UpdateSets();
+            DM.UpdateSetURLs();
             List<MTGSet> sets = DM.GetSets();
             
             if (sets.Count == 0)
@@ -90,18 +90,6 @@ namespace MTGUtils
             recentMTGSetsButton.Enabled = sets.Count > 0;
         }
 
-        private void allMTGSetsButton_Click(object sender, EventArgs e)
-        {
-            UnselectAllMTGSetsCheckedListBox();
-
-            /* All sets checked. */
-            for (int i = 0; i < mtgSetsCheckedListBox.Items.Count; i++)
-            {
-                mtgSetsCheckedListBox.SetItemChecked(i, true);
-            }
-            UpdateStatusLabel("All: Complete");
-        }
-
         private void fromDateMTGSetsButtonHelper(DateTime fromDate)
         {
             List<MTGSet> currentSets = new List<MTGSet>();
@@ -132,6 +120,18 @@ namespace MTGUtils
                 log.Warn("fromDateMTGSetsButtonHelper Error:", err);
                 UpdateStatusLabel("Certain Sets: Error");
             }
+        }
+
+        private void allMTGSetsButton_Click(object sender, EventArgs e)
+        {
+            UnselectAllMTGSetsCheckedListBox();
+
+            /* All sets checked. */
+            for (int i = 0; i < mtgSetsCheckedListBox.Items.Count; i++)
+            {
+                mtgSetsCheckedListBox.SetItemChecked(i, true);
+            }
+            UpdateStatusLabel("All: Complete");
         }
 
         private void standardMTGSetsButton_Click(object sender, EventArgs e)
@@ -177,11 +177,10 @@ namespace MTGUtils
             fromDateMTGSetsButtonHelper(mostRecent);
         }
 
-        /* TODO Use A status bar at the bottom of the window, more professional looking. */
+        /* Simple function for updating the Status bar at the bottom of the window */
         private void UpdateStatusLabel(string statusIn)
         {
-            lblSetsStatus.Text = statusIn;
-            lblSetsStatus.Refresh();
+            toolStripStatusLabel.Text = statusIn;
         }
 
         /* Uncheck all boxes in the mtgSetsCheckedListBOx */
@@ -191,6 +190,12 @@ namespace MTGUtils
             {
                 mtgSetsCheckedListBox.SetItemChecked(i, false);
             }
+        }
+
+        /* When a different set is selected, grab URL for specific cards if required and populate mtgCardsGraphListBox */
+        private void mtgSetsGraphListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DM.UpdateURLsForSet(mtgSetsGraphListBox.SelectedItem.ToString());
         }
 
     }

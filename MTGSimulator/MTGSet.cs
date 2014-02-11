@@ -7,7 +7,7 @@ namespace MTGUtils
 {
     public class MTGSet
     {
-        protected string SetName;
+        public string SetName { get; set; }
         public DateTime SetDate { get; set; }
         public DateTime SetLastUpdate { get; set; }
         public string URL { get; set;}
