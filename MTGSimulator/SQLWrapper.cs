@@ -58,7 +58,8 @@ namespace MTGUtils
                     DateTime rd = (DateTime)rdr["releaseDate"];
                     DateTime lu = (DateTime)rdr["lastUpdate"];
 
-                    MTGSet set = new MTGSet(rdr["setName"].ToString(), rd, lu);
+                    MTGSet set = new MTGSet(rdr["setName"].ToString(), rd);
+                    set.CardListLastUpdate = lu;
                     set.URL = rdr["urlList"].ToString();
                     set.FoilURL = rdr["foilURLList"].ToString();
                     retSet.Add(set);
@@ -92,7 +93,7 @@ namespace MTGUtils
                                                 "VALUES (@NAME, @URL, @FURL, @LU, @RD)";
                             cmd.Parameters.AddWithValue("@URL", set.URL);
                             cmd.Parameters.AddWithValue("@FURL", set.FoilURL);
-                            cmd.Parameters.AddWithValue("@LU", set.SetLastUpdate);
+                            cmd.Parameters.AddWithValue("@LU", set.CardListLastUpdate);
                             cmd.Parameters.AddWithValue("@RD", set.SetDate);
                             cmd.Parameters.AddWithValue("@Name", set.ToString());
                             sum += cmd.ExecuteNonQuery();

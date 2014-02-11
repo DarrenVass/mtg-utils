@@ -31,6 +31,7 @@
             this.mainTab = new System.Windows.Forms.TabControl();
             this.mainTabs = new System.Windows.Forms.TabPage();
             this.windowStatusStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerTopMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerTopSourcesSetsCheckBoxes = new System.Windows.Forms.SplitContainer();
@@ -50,7 +51,6 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.mainTab.SuspendLayout();
             this.mainTabs.SuspendLayout();
             this.windowStatusStrip.SuspendLayout();
@@ -107,6 +107,15 @@
             this.windowStatusStrip.Size = new System.Drawing.Size(1050, 22);
             this.windowStatusStrip.TabIndex = 1;
             this.windowStatusStrip.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel
+            // 
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(1035, 17);
+            this.toolStripStatusLabel.Spring = true;
+            this.toolStripStatusLabel.Text = "Status: Idle";
+            this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // splitContainerMain
             // 
@@ -356,15 +365,6 @@
             this.label1.Size = new System.Drawing.Size(174, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "This Program created by \"JollyGuy\"";
-            // 
-            // toolStripStatusLabel
-            // 
-            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(1035, 17);
-            this.toolStripStatusLabel.Spring = true;
-            this.toolStripStatusLabel.Text = "Status: Idle";
-            this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // MainWindow
             // 

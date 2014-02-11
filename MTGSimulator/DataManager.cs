@@ -13,6 +13,7 @@ namespace MTGUtils
     class DataManager
     {
         private List<MTGSet> Sets;
+        private DateTime LastSetsUpdate { get; set; }
         private SQLWrapper _SQLWrapper;
         private HTMLParser _HTMLParser;
 
@@ -45,34 +46,38 @@ namespace MTGUtils
             _SQLWrapper.UpdateSetList(Sets);
 
             Sets = Sets.OrderBy(set => set.ToString()).ToList();
+            LastSetsUpdate = DateTime.Today;
         }
 
-        public void UpdateURLsForSet(string setName)
+        public void GetCardListForSet(string setName)
         {
-            string setURL = null;
+            MTGSet curSet = null;
             foreach (MTGSet set in Sets)
             {
                 if (set.SetName.CompareTo(setName) == 0)
                 {
-                    setURL = set.URL;
+                    curSet = set;
                     break;
                 }
             }
 
-            if (setURL == null)
+            if (curSet == null)
             {
-                log.Error("Could not find SetURL for set named '" + setName + "'");
+                log.Error("Could not find Set named '" + setName + "'");
                 return;
             }
 
-            log.Debug("Updating CardURLs for : " + startURL + setURL);
-            URLFetcher Fetcher = new URLFetcher(startURL + setURL);
-            string ret = Fetcher.Fetch();
+            if (curSet.CardListLastUpdate.CompareTo(DateTime.Today) < 0)
+            {
+                URLFetcher Fetcher = new URLFetcher(startURL + curSet.URL);
+                string ret = Fetcher.Fetch();
 
-            List<string> CardURLs;
-            CardURLs = _HTMLParser.ParseCardURLs(ret);
+                List<MTGCard> Cards;
+                Cards = _HTMLParser.ParseCardURLs(ret);
+                Cards = Cards.OrderBy(card => card.ToString()).ToList();
 
-
+                curSet.CardListLastUpdate = DateTime.Today;
+            }
         }
 
         public List<MTGSet> GetSets()

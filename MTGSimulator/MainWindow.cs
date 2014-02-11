@@ -181,6 +181,7 @@ namespace MTGUtils
         private void UpdateStatusLabel(string statusIn)
         {
             toolStripStatusLabel.Text = statusIn;
+            this.windowStatusStrip.Refresh();
         }
 
         /* Uncheck all boxes in the mtgSetsCheckedListBOx */
@@ -195,7 +196,10 @@ namespace MTGUtils
         /* When a different set is selected, grab URL for specific cards if required and populate mtgCardsGraphListBox */
         private void mtgSetsGraphListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DM.UpdateURLsForSet(mtgSetsGraphListBox.SelectedItem.ToString());
+            string SetName = mtgSetsGraphListBox.SelectedItem.ToString();
+            UpdateStatusLabel("Status: Fetching info for " + SetName);
+            DM.GetCardListForSet(SetName);
+            UpdateStatusLabel("Status: Complete");
         }
 
     }

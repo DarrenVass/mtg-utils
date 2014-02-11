@@ -74,9 +74,8 @@ namespace MTGUtils
                                 DateTime setDate = new DateTime(Convert.ToInt16(dates[2]),
                                                                 Convert.ToInt16(dates[0]),
                                                                 Convert.ToInt16(dates[1]));
-                                DateTime lastUpdate = new DateTime(); // Unset as we do not yet know last update time.
-
-                                MTGSet tempSet = new MTGSet(setName, setDate, lastUpdate);
+ 
+                                MTGSet tempSet = new MTGSet(setName, setDate);
                                 tempSet.URL = setURL;
                                 retSets.Add(tempSet);
                             }
@@ -97,9 +96,9 @@ namespace MTGUtils
             return retSets;
         }
 
-        public List<string> ParseCardURLs(string htmlIn)
+        public List<MTGCard> ParseCardURLs(string htmlIn)
         {
-            List<string> retURLs = new List<string>();
+            List<MTGCard> retCards = new List<MTGCard>();
 
             HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(htmlIn.ToString());
@@ -118,29 +117,25 @@ namespace MTGUtils
                     HtmlAgilityPack.HtmlNode bodyNode = htmlDoc.DocumentNode.SelectSingleNode("//tbody");
                     if (bodyNode != null)
                     {
-                        log.Error(bodyNode.ToString());
-                        /*
                         foreach (HtmlAgilityPack.HtmlNode childNode in bodyNode.ChildNodes)
                         {
                             //FirstNode is URL & Name
+
                             HtmlAgilityPack.HtmlNode lineNode = childNode.FirstChild;
+                            if (lineNode == null) { continue; }
+
                             string setName = lineNode.InnerText;
                             string setURL = lineNode.FirstChild.GetAttributeValue("href", null);
+                            string price = lineNode.NextSibling.InnerText;
+                            
+                            // There are some duplicated entries where the 2nd has price of "%N/A", giving same URL's. Ignore them
+                            if (price.CompareTo("$N/A") == 0) { continue; }
 
-                            //SecondNode is Set Release Date
-                            lineNode = lineNode.NextSibling;
-                            string date = lineNode.FirstChild.WriteTo();
-                            string[] dates = date.Split('/');
-                            DateTime setDate = new DateTime(Convert.ToInt16(dates[2]),
-                                                            Convert.ToInt16(dates[0]),
-                                                            Convert.ToInt16(dates[1]));
-                            DateTime lastUpdate = new DateTime(); // Unset as we do not yet know last update time.
-
-                            MTGSet tempSet = new MTGSet(setName, setDate, lastUpdate);
-                            tempSet.URL = setURL;
-                            retSets.Add(tempSet);
+                            price = price.Replace("$", string.Empty);
+                            price = price.Replace(".", string.Empty);
+                            MTGCard tempCard = new MTGCard(setName, Convert.ToUInt64(price), setURL);
+                            retCards.Add(tempCard);
                         }
-                        */
                     }
                     else
                     {
@@ -154,7 +149,7 @@ namespace MTGUtils
                 }
             }
 
-            return retURLs;
+            return retCards;
         }
     }
 }
