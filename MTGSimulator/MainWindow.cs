@@ -136,30 +136,13 @@ namespace MTGUtils
             standardMTGSetsButton.Enabled = sets.Count > 0;
             modernMTGSetsButton.Enabled = sets.Count > 0;
             recentMTGSetsButton.Enabled = sets.Count > 0;
-        }
-
-        /*
-         * Updates the elements of the mtgSetsGraphListBox based on checked state of mtgSetsCheckedListBox
-         */
-        private void updateMTGSetsGraphListBox()
-        {
-            mtgSetsGraphListBox.BeginUpdate();
-            mtgSetsGraphListBox.Items.Clear();
-            if (mtgSetsCheckedListBox.CheckedItems.Count > 0)
-            {
-                foreach (object checkedIndex in mtgSetsCheckedListBox.CheckedItems)
-                {
-                    mtgSetsGraphListBox.Items.Add(checkedIndex);
-                }
-            }
-            mtgSetsGraphListBox.EndUpdate();
+            clearMTGSetsButton.Enabled = sets.Count > 0;
         }
 
         private void fromDateMTGSetsButtonHelper(DateTime fromDate)
         {
             List<MTGSet> currentSets = new List<MTGSet>();
-            log.Debug(fromDate.ToString());
-            foreach (MTGSet set in DM.GetSets())
+             foreach (MTGSet set in DM.GetSets())
             {
                 if (set.SetDate.CompareTo(fromDate) >= 0)
                 {
@@ -212,7 +195,7 @@ namespace MTGUtils
             DateTime eighthDate = DateTime.Today;
             foreach(MTGSet set in sets)
             {
-                if(set.ToString().CompareTo("8th Edition ") == 0)
+                if(set.ToString().CompareTo("8th Edition") == 0)
                 {
                     eighthDate = set.SetDate;
                     break;
@@ -253,6 +236,40 @@ namespace MTGUtils
             UnselectAllMTGSetsCheckedListBox();
         }
 
+        /*
+         * Updates the elements of the mtgSetsGraphListBox based on checked state of mtgSetsCheckedListBox
+         */
+        private void updateMTGSetsGraphListBox()
+        {
+            mtgSetsGraphListBox.BeginUpdate();
+            mtgSetsGraphListBox.Items.Clear();
+            if (mtgSetsCheckedListBox.CheckedItems.Count > 0)
+            {
+                foreach (object checkedIndex in mtgSetsCheckedListBox.CheckedItems)
+                {
+                    mtgSetsGraphListBox.Items.Add(checkedIndex);
+                }
+            }
+            mtgSetsGraphListBox.EndUpdate();
+        }
+
+        /*
+         * Updates the elements of the mtgCardsGraphListBox based on List<MTGCard>
+         */
+        private void updateMTGCardsGraphListBox(List<MTGCard> CurCards)
+        {
+            mtgCardsGraphListBox.BeginUpdate();
+            mtgCardsGraphListBox.Items.Clear();
+            if (CurCards.Count > 0)
+            {
+                foreach (MTGCard card in CurCards)
+                {
+                    mtgCardsGraphListBox.Items.Add(card.ToPriceString());
+                }
+            }
+            mtgCardsGraphListBox.EndUpdate();
+        }
+
     /* Simple function for updating the Status bar at the bottom of the window */
         private void UpdateStatusLabel(string statusIn)
         {
@@ -263,10 +280,23 @@ namespace MTGUtils
         /* When a different set is selected, grab URL for specific cards if required and populate mtgCardsGraphListBox */
         private void mtgSetsGraphListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (mtgSetsGraphListBox.SelectedItem == null)
+            {
+                return;
+            }
             string SetName = mtgSetsGraphListBox.SelectedItem.ToString();
             UpdateStatusLabel("Status: Fetching info for " + SetName);
-            DM.GetCardListForSet(SetName);
+            List<MTGCard> Cards = DM.GetCardListForSet(SetName);
             UpdateStatusLabel("Status: Complete");
+
+            if (Cards != null)
+            {
+                updateMTGCardsGraphListBox(Cards);
+            }
+            else
+            {
+                UpdateStatusLabel("Status: Error retrieving card list for set " + SetName);
+            }
         }
 
         /*

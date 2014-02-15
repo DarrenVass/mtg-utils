@@ -17,18 +17,26 @@ namespace MTGUtils
         public string SetName { get; set; }
         public UInt64 Price { get; set; }
         public string URL { get; set; }
+        public string FoilURL { get; set; }
         public DateTime LastPricePointUpdate { get; set; }
 
-        public MTGCard(string nameIn, UInt64 priceIn, string urlIn)
+        public MTGCard(string cardNameIn, string setNameIn, UInt64 priceIn)
         {
-            CardName = nameIn;
+            CardName = cardNameIn;
+            SetName = setNameIn;
             Price = priceIn;
-            URL = urlIn;
         }
 
         public override string ToString()
         {
             return CardName;
+        }
+
+        public string ToPriceString()
+        {
+            string name = CardName;
+            name += " ($" + ((int)(Price / 100)).ToString() + "." + (Price % 100).ToString("00") +")";
+            return name;
         }
     }
 }

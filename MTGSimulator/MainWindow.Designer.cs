@@ -28,16 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mainTab = new System.Windows.Forms.TabControl();
             this.mainTabs = new System.Windows.Forms.TabPage();
-            this.windowStatusStrip = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerTopMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerTopSourcesSetsCheckBoxes = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.mtgPriceSourceCheckListBox = new System.Windows.Forms.CheckedListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.clearMTGSetsButton = new System.Windows.Forms.Button();
             this.recentMTGSetsButton = new System.Windows.Forms.Button();
             this.modernMTGSetsButton = new System.Windows.Forms.Button();
             this.standardMTGSetsButton = new System.Windows.Forms.Button();
@@ -48,13 +46,13 @@
             this.splitContainerGraphSetsCards = new System.Windows.Forms.SplitContainer();
             this.mtgSetsGraphListBox = new System.Windows.Forms.ListBox();
             this.mtgCardsGraphListBox = new System.Windows.Forms.ListBox();
+            this.windowStatusStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.clearMTGSetsButton = new System.Windows.Forms.Button();
-            this.mainTab.SuspendLayout();
+            this.mainTab = new System.Windows.Forms.TabControl();
             this.mainTabs.SuspendLayout();
-            this.windowStatusStrip.SuspendLayout();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
             this.splitContainerMain.SuspendLayout();
@@ -70,27 +68,16 @@
             this.splitContainerGraphSetsCards.Panel1.SuspendLayout();
             this.splitContainerGraphSetsCards.Panel2.SuspendLayout();
             this.splitContainerGraphSetsCards.SuspendLayout();
+            this.windowStatusStrip.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.mainTab.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // mainTab
-            // 
-            this.mainTab.Controls.Add(this.mainTabs);
-            this.mainTab.Controls.Add(this.tabPage2);
-            this.mainTab.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainTab.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.mainTab.Location = new System.Drawing.Point(0, 0);
-            this.mainTab.Name = "mainTab";
-            this.mainTab.SelectedIndex = 0;
-            this.mainTab.Size = new System.Drawing.Size(1064, 778);
-            this.mainTab.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
-            this.mainTab.TabIndex = 0;
             // 
             // mainTabs
             // 
-            this.mainTabs.Controls.Add(this.windowStatusStrip);
             this.mainTabs.Controls.Add(this.splitContainerMain);
+            this.mainTabs.Controls.Add(this.windowStatusStrip);
             this.mainTabs.Location = new System.Drawing.Point(4, 22);
             this.mainTabs.Name = "mainTabs";
             this.mainTabs.Padding = new System.Windows.Forms.Padding(3);
@@ -98,25 +85,6 @@
             this.mainTabs.TabIndex = 0;
             this.mainTabs.Text = "Price Analyzer";
             this.mainTabs.UseVisualStyleBackColor = true;
-            // 
-            // windowStatusStrip
-            // 
-            this.windowStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel});
-            this.windowStatusStrip.Location = new System.Drawing.Point(3, 727);
-            this.windowStatusStrip.Name = "windowStatusStrip";
-            this.windowStatusStrip.Size = new System.Drawing.Size(1050, 22);
-            this.windowStatusStrip.TabIndex = 1;
-            this.windowStatusStrip.Text = "statusStrip1";
-            // 
-            // toolStripStatusLabel
-            // 
-            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
-            this.toolStripStatusLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.toolStripStatusLabel.Size = new System.Drawing.Size(1035, 17);
-            this.toolStripStatusLabel.Spring = true;
-            this.toolStripStatusLabel.Text = "Status: Idle";
-            this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // splitContainerMain
             // 
@@ -137,7 +105,7 @@
             // 
             this.splitContainerMain.Panel2.BackColor = System.Drawing.Color.Silver;
             this.splitContainerMain.Panel2.Controls.Add(this.splitContainerBottomMain);
-            this.splitContainerMain.Size = new System.Drawing.Size(1050, 746);
+            this.splitContainerMain.Size = new System.Drawing.Size(1050, 724);
             this.splitContainerMain.SplitterDistance = 151;
             this.splitContainerMain.TabIndex = 0;
             // 
@@ -226,6 +194,16 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "MTG Sets";
             // 
+            // clearMTGSetsButton
+            // 
+            this.clearMTGSetsButton.Location = new System.Drawing.Point(6, 77);
+            this.clearMTGSetsButton.Name = "clearMTGSetsButton";
+            this.clearMTGSetsButton.Size = new System.Drawing.Size(58, 23);
+            this.clearMTGSetsButton.TabIndex = 9;
+            this.clearMTGSetsButton.Text = "Clear";
+            this.clearMTGSetsButton.UseVisualStyleBackColor = true;
+            this.clearMTGSetsButton.Click += new System.EventHandler(this.clearMTGSetsButton_Click);
+            // 
             // recentMTGSetsButton
             // 
             this.recentMTGSetsButton.Location = new System.Drawing.Point(70, 48);
@@ -297,7 +275,7 @@
             // splitContainerBottomMain.Panel1
             // 
             this.splitContainerBottomMain.Panel1.Controls.Add(this.splitContainerGraphSetsCards);
-            this.splitContainerBottomMain.Size = new System.Drawing.Size(1050, 591);
+            this.splitContainerBottomMain.Size = new System.Drawing.Size(1050, 569);
             this.splitContainerBottomMain.SplitterDistance = 232;
             this.splitContainerBottomMain.TabIndex = 0;
             // 
@@ -316,8 +294,8 @@
             // splitContainerGraphSetsCards.Panel2
             // 
             this.splitContainerGraphSetsCards.Panel2.Controls.Add(this.mtgCardsGraphListBox);
-            this.splitContainerGraphSetsCards.Size = new System.Drawing.Size(232, 591);
-            this.splitContainerGraphSetsCards.SplitterDistance = 266;
+            this.splitContainerGraphSetsCards.Size = new System.Drawing.Size(232, 569);
+            this.splitContainerGraphSetsCards.SplitterDistance = 256;
             this.splitContainerGraphSetsCards.TabIndex = 0;
             // 
             // mtgSetsGraphListBox
@@ -326,7 +304,7 @@
             this.mtgSetsGraphListBox.FormattingEnabled = true;
             this.mtgSetsGraphListBox.Location = new System.Drawing.Point(0, 0);
             this.mtgSetsGraphListBox.Name = "mtgSetsGraphListBox";
-            this.mtgSetsGraphListBox.Size = new System.Drawing.Size(230, 264);
+            this.mtgSetsGraphListBox.Size = new System.Drawing.Size(230, 251);
             this.mtgSetsGraphListBox.TabIndex = 0;
             this.mtgSetsGraphListBox.SelectedIndexChanged += new System.EventHandler(this.mtgSetsGraphListBox_SelectedIndexChanged);
             // 
@@ -336,8 +314,27 @@
             this.mtgCardsGraphListBox.FormattingEnabled = true;
             this.mtgCardsGraphListBox.Location = new System.Drawing.Point(0, 0);
             this.mtgCardsGraphListBox.Name = "mtgCardsGraphListBox";
-            this.mtgCardsGraphListBox.Size = new System.Drawing.Size(230, 316);
+            this.mtgCardsGraphListBox.Size = new System.Drawing.Size(230, 303);
             this.mtgCardsGraphListBox.TabIndex = 0;
+            // 
+            // windowStatusStrip
+            // 
+            this.windowStatusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel});
+            this.windowStatusStrip.Location = new System.Drawing.Point(3, 727);
+            this.windowStatusStrip.Name = "windowStatusStrip";
+            this.windowStatusStrip.Size = new System.Drawing.Size(1050, 22);
+            this.windowStatusStrip.TabIndex = 1;
+            this.windowStatusStrip.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel
+            // 
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(1035, 17);
+            this.toolStripStatusLabel.Spring = true;
+            this.toolStripStatusLabel.Text = "Status: Idle";
+            this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // tabPage2
             // 
@@ -369,15 +366,18 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "This Program created by \"JollyGuy\"";
             // 
-            // clearMTGSetsButton
+            // mainTab
             // 
-            this.clearMTGSetsButton.Location = new System.Drawing.Point(6, 77);
-            this.clearMTGSetsButton.Name = "clearMTGSetsButton";
-            this.clearMTGSetsButton.Size = new System.Drawing.Size(58, 23);
-            this.clearMTGSetsButton.TabIndex = 9;
-            this.clearMTGSetsButton.Text = "Clear";
-            this.clearMTGSetsButton.UseVisualStyleBackColor = true;
-            this.clearMTGSetsButton.Click += new System.EventHandler(this.clearMTGSetsButton_Click);
+            this.mainTab.Controls.Add(this.mainTabs);
+            this.mainTab.Controls.Add(this.tabPage2);
+            this.mainTab.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainTab.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.mainTab.Location = new System.Drawing.Point(0, 0);
+            this.mainTab.Name = "mainTab";
+            this.mainTab.SelectedIndex = 0;
+            this.mainTab.Size = new System.Drawing.Size(1064, 778);
+            this.mainTab.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
+            this.mainTab.TabIndex = 0;
             // 
             // MainWindow
             // 
@@ -387,13 +387,11 @@
             this.Controls.Add(this.mainTab);
             this.Name = "MainWindow";
             this.Text = "Jolly MTG";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
-            this.mainTab.ResumeLayout(false);
             this.mainTabs.ResumeLayout(false);
             this.mainTabs.PerformLayout();
-            this.windowStatusStrip.ResumeLayout(false);
-            this.windowStatusStrip.PerformLayout();
             this.splitContainerMain.Panel1.ResumeLayout(false);
             this.splitContainerMain.Panel2.ResumeLayout(false);
             this.splitContainerMain.ResumeLayout(false);
@@ -409,39 +407,43 @@
             this.splitContainerGraphSetsCards.Panel1.ResumeLayout(false);
             this.splitContainerGraphSetsCards.Panel2.ResumeLayout(false);
             this.splitContainerGraphSetsCards.ResumeLayout(false);
+            this.windowStatusStrip.ResumeLayout(false);
+            this.windowStatusStrip.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.mainTab.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TabControl mainTab;
         private System.Windows.Forms.TabPage mainTabs;
-        private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.SplitContainer splitContainerMain;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.SplitContainer splitContainerBottomMain;
-        private System.Windows.Forms.SplitContainer splitContainerGraphSetsCards;
-        private System.Windows.Forms.ListBox mtgSetsGraphListBox;
-        private System.Windows.Forms.ListBox mtgCardsGraphListBox;
         private System.Windows.Forms.StatusStrip windowStatusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.SplitContainer splitContainerTopMain;
         private System.Windows.Forms.SplitContainer splitContainerTopSourcesSetsCheckBoxes;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckedListBox mtgPriceSourceCheckListBox;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button clearMTGSetsButton;
         private System.Windows.Forms.Button recentMTGSetsButton;
         private System.Windows.Forms.Button modernMTGSetsButton;
         private System.Windows.Forms.Button standardMTGSetsButton;
         private System.Windows.Forms.CheckedListBox mtgSetsCheckedListBox;
         private System.Windows.Forms.Button updateSetsButton;
         private System.Windows.Forms.Button allMTGSetsButton;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
-        private System.Windows.Forms.Button clearMTGSetsButton;
+        private System.Windows.Forms.SplitContainer splitContainerBottomMain;
+        private System.Windows.Forms.SplitContainer splitContainerGraphSetsCards;
+        private System.Windows.Forms.ListBox mtgSetsGraphListBox;
+        private System.Windows.Forms.ListBox mtgCardsGraphListBox;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TabControl mainTab;
+
     }
 }
 

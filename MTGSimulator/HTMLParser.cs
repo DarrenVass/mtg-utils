@@ -44,8 +44,8 @@ namespace MTGUtils
                         {
                             //FirstNode is URL & Name
                             HtmlAgilityPack.HtmlNode lineNode = childNode.FirstChild;
-                            string setName = lineNode.InnerText;
-                            string setURL = lineNode.FirstChild.GetAttributeValue("href", null);
+                            string setName = lineNode.InnerText.TrimEnd(' ');
+                            string setURL = lineNode.FirstChild.GetAttributeValue("href", null).TrimEnd(' ');
 
                             if (setName.Contains("Foil"))
                             { /* Foil Set, just add URL */
@@ -96,7 +96,7 @@ namespace MTGUtils
             return retSets;
         }
 
-        public List<MTGCard> ParseCardURLs(string htmlIn)
+        public List<MTGCard> ParseCardURLs(string htmlIn, string setName)
         {
             List<MTGCard> retCards = new List<MTGCard>();
 
@@ -124,8 +124,8 @@ namespace MTGUtils
                             HtmlAgilityPack.HtmlNode lineNode = childNode.FirstChild;
                             if (lineNode == null) { continue; }
 
-                            string setName = lineNode.InnerText;
-                            string setURL = lineNode.FirstChild.GetAttributeValue("href", null);
+                            string cardName = lineNode.InnerText.TrimEnd(' ');
+                            string setURL = lineNode.FirstChild.GetAttributeValue("href", null).TrimEnd(' ').TrimEnd(' ');
                             string price = lineNode.NextSibling.InnerText;
                             
                             // There are some duplicated entries where the 2nd has price of "%N/A", giving same URL's. Ignore them
@@ -133,7 +133,8 @@ namespace MTGUtils
 
                             price = price.Replace("$", string.Empty);
                             price = price.Replace(".", string.Empty);
-                            MTGCard tempCard = new MTGCard(setName, Convert.ToUInt64(price), setURL);
+                            MTGCard tempCard = new MTGCard(cardName, setName, Convert.ToUInt64(price));
+                            tempCard.URL = setURL;
                             retCards.Add(tempCard);
                         }
                     }
