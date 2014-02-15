@@ -30,20 +30,58 @@ namespace MTGUtils
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            /* Check all the MTGPrice.com Sources */
-            for (int i = 0; i < mtgPriceSourceCheckListBox.Items.Count; i++)
-            {
-                mtgPriceSourceCheckListBox.SetItemChecked(i, true);
-            }
+            List<int> checkedPriceSources = new List<int>();
+            List<int> checkedMTGSets = new List<int>();
+            DM.GetAppState(ref checkedPriceSources, ref checkedMTGSets);
 
-            updateMTGSetsCheckedListBox();
-            if (mtgSetsCheckedListBox.Items.Count == 0)
-            { 
-                mtgSetsCheckedListBox.Items.Add("Need to \"Update Sets\"");
-                mtgSetsCheckedListBox.Enabled = false;
+            /* Check all the MTGPrice.com Sources */
+            try
+            {
+                foreach (int index in checkedPriceSources)
+                    mtgPriceSourceCheckListBox.SetItemChecked(index, true);
+            }
+            catch (Exception err)
+            {
+                // This will typically mean the state is out of date somehow.
+                log.Warn("Error updating mtgPriceSourceCheckListBox from stored state: " + err);
+            }
+            try
+            {
+                updateMTGSetsCheckedListBox();
+                if (mtgSetsCheckedListBox.Items.Count == 0)
+                {
+                    mtgSetsCheckedListBox.Items.Add("Need to \"Update Sets\"");
+                    mtgSetsCheckedListBox.Enabled = false;
+                }
+                else
+                {
+                    foreach (int index in checkedMTGSets)
+                        mtgSetsCheckedListBox.SetItemChecked(index, true);
+                }
+            }
+            catch (Exception err)
+            {
+                // This will typically mean the state is out of date somehow.
+                log.Warn("Error updating mtgSetsCheckedListBox from stored state: " + err);
             }
         }
 
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            List<int> checkedPriceSources = new List<int>();
+            foreach (int checkedIndex in mtgPriceSourceCheckListBox.CheckedIndices)
+                checkedPriceSources.Add(checkedIndex);
+
+            List<int> checkedMTGSets = new List<int>();
+            foreach (int checkedIndex in mtgSetsCheckedListBox.CheckedIndices)
+                checkedMTGSets.Add(checkedIndex);
+
+            DM.UpdateAppState(checkedPriceSources, checkedMTGSets);
+
+            DM.Dispose();
+        }
+
+    /* For Handling the MTGSetsCheckedListBox */
         private void updateSetsButton_Click(object sender, EventArgs e)
         {
             updateSetsButton.Enabled = false;
@@ -177,13 +215,6 @@ namespace MTGUtils
             fromDateMTGSetsButtonHelper(mostRecent);
         }
 
-        /* Simple function for updating the Status bar at the bottom of the window */
-        private void UpdateStatusLabel(string statusIn)
-        {
-            toolStripStatusLabel.Text = statusIn;
-            this.windowStatusStrip.Refresh();
-        }
-
         /* Uncheck all boxes in the mtgSetsCheckedListBOx */
         private void UnselectAllMTGSetsCheckedListBox()
         {
@@ -191,6 +222,13 @@ namespace MTGUtils
             {
                 mtgSetsCheckedListBox.SetItemChecked(i, false);
             }
+        }
+
+    /* Simple function for updating the Status bar at the bottom of the window */
+        private void UpdateStatusLabel(string statusIn)
+        {
+            toolStripStatusLabel.Text = statusIn;
+            this.windowStatusStrip.Refresh();
         }
 
         /* When a different set is selected, grab URL for specific cards if required and populate mtgCardsGraphListBox */
@@ -201,6 +239,8 @@ namespace MTGUtils
             DM.GetCardListForSet(SetName);
             UpdateStatusLabel("Status: Complete");
         }
+
+        
 
     }
 }

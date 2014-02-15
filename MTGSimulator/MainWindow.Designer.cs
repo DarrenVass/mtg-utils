@@ -375,6 +375,7 @@
             this.Name = "MainWindow";
             this.Text = "Jolly MTG";
             this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
             this.mainTab.ResumeLayout(false);
             this.mainTabs.ResumeLayout(false);
             this.mainTabs.PerformLayout();

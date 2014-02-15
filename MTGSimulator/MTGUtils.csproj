@@ -62,8 +62,9 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="MTGCard.cs" />
-    <Compile Include="MTGSet.cs" />
+    <Compile Include="Structs\AppState.cs" />
+    <Compile Include="Structs\MTGCard.cs" />
+    <Compile Include="Structs\MTGSet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainWindow.resx">
