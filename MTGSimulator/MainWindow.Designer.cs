@@ -51,6 +51,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.clearMTGSetsButton = new System.Windows.Forms.Button();
             this.mainTab.SuspendLayout();
             this.mainTabs.SuspendLayout();
             this.windowStatusStrip.SuspendLayout();
@@ -210,6 +211,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.clearMTGSetsButton);
             this.groupBox2.Controls.Add(this.recentMTGSetsButton);
             this.groupBox2.Controls.Add(this.modernMTGSetsButton);
             this.groupBox2.Controls.Add(this.standardMTGSetsButton);
@@ -261,14 +263,15 @@
             this.mtgSetsCheckedListBox.Name = "mtgSetsCheckedListBox";
             this.mtgSetsCheckedListBox.Size = new System.Drawing.Size(169, 124);
             this.mtgSetsCheckedListBox.TabIndex = 2;
+            this.mtgSetsCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.mtgSetsCheckedListBox_ItemCheck);
             // 
             // updateSetsButton
             // 
-            this.updateSetsButton.Location = new System.Drawing.Point(6, 80);
+            this.updateSetsButton.Location = new System.Drawing.Point(6, 105);
             this.updateSetsButton.Name = "updateSetsButton";
             this.updateSetsButton.Size = new System.Drawing.Size(122, 34);
             this.updateSetsButton.TabIndex = 4;
-            this.updateSetsButton.Text = "Update Sets";
+            this.updateSetsButton.Text = "Update Set URLs";
             this.updateSetsButton.UseVisualStyleBackColor = true;
             this.updateSetsButton.Click += new System.EventHandler(this.updateSetsButton_Click);
             // 
@@ -366,6 +369,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "This Program created by \"JollyGuy\"";
             // 
+            // clearMTGSetsButton
+            // 
+            this.clearMTGSetsButton.Location = new System.Drawing.Point(6, 77);
+            this.clearMTGSetsButton.Name = "clearMTGSetsButton";
+            this.clearMTGSetsButton.Size = new System.Drawing.Size(58, 23);
+            this.clearMTGSetsButton.TabIndex = 9;
+            this.clearMTGSetsButton.Text = "Clear";
+            this.clearMTGSetsButton.UseVisualStyleBackColor = true;
+            this.clearMTGSetsButton.Click += new System.EventHandler(this.clearMTGSetsButton_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -428,6 +441,7 @@
         private System.Windows.Forms.Button updateSetsButton;
         private System.Windows.Forms.Button allMTGSetsButton;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private System.Windows.Forms.Button clearMTGSetsButton;
     }
 }
 
