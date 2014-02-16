@@ -5,10 +5,11 @@ using System.Text;
 
 namespace MTGUtils
 {
-    struct PricePoint
+    public struct PricePoint
     {
         public UInt64 Price { get; set; }
         public DateTime Date { get; set; }
+        public string Retailer { get; set; }
     }
 
     public class MTGCard

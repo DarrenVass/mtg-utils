@@ -46,6 +46,11 @@ namespace MTGUtils
                                         "price int, url varchar(256), foilURL varchar(256), lastUpdate date);";
             SQLiteCommand cmd2 = new SQLiteCommand(createCardTable, MTGDB);
             cmd2.ExecuteNonQuery();
+
+            string createPricePointTable = "CREATE TABLE IF NOT EXISTS mtgPP(cardName varchar(256) NOT NULL, setName varchar(256) NOT NULL," +
+                                        "price int, retailer varchar(32) ,priceDate date);";
+            SQLiteCommand cmd3 = new SQLiteCommand(createPricePointTable, MTGDB);
+            cmd3.ExecuteNonQuery();
         }
 
         /* Returns a List of the MTGSets from the DB */
@@ -150,11 +155,71 @@ namespace MTGUtils
                         cmd.CommandText = "INSERT OR REPLACE INTO mtgCards (cardName, setName, price, url, foilURL, lastUpdate) " +
                                             "VALUES (@CNAME, @SNAME, @PRICE, @URL, @FURL, @LU)";
                         cmd.Parameters.AddWithValue("@URL", card.URL);
-                        cmd.Parameters.AddWithValue("@FURL", card.URL);
+                        cmd.Parameters.AddWithValue("@FURL", card.FoilURL);
                         cmd.Parameters.AddWithValue("@LU", card.LastPricePointUpdate);
                         cmd.Parameters.AddWithValue("@CName", card.CardName);
                         cmd.Parameters.AddWithValue("@SName", card.SetName);
                         cmd.Parameters.AddWithValue("@PRICE", card.Price);
+                        sum += cmd.ExecuteNonQuery();
+                    }
+                    trn.Commit();
+                }
+                catch (Exception err)
+                {
+                    log.Error("Insert/Update Error:", err);
+                }
+            }
+        }
+
+        /* Returns a List of the PricePoints from the DB for a given Card */
+        public List<PricePoint> GetPricePoints(MTGCard CardIn)
+        {
+            List<PricePoint> retPP = new List<PricePoint>();
+            try
+            {
+                using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
+                {
+                    cmd.CommandText = "SELECT * FROM mtgPP WHERE cardName=@CNAME AND setName=@SNAME";
+                    cmd.Parameters.AddWithValue("@SNAME", CardIn.SetName);
+                    cmd.Parameters.AddWithValue("@CNAME", CardIn.CardName);
+                    SQLiteDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        PricePoint PP = new PricePoint();
+                        PP.Date = (DateTime)rdr["priceDate"];
+                        PP.Price = Convert.ToUInt64(rdr["price"]);
+                        PP.Retailer = rdr["retailer"].ToString();
+                        retPP.Add(PP);
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                log.Warn("GetPricePoints() for card " + CardIn.CardName + " in set " + CardIn.SetName + " Err:", err);
+            }
+
+            return retPP;
+        }
+
+        /* For saving the updated card list for a given set */
+        public void UpdatePricePoints(List<PricePoint> PPsIn, MTGCard CardIn)
+        {
+            int sum = 0;
+            foreach (PricePoint pp in PPsIn)
+            {
+                try
+                {
+                    SQLiteTransaction trn = MTGDB.BeginTransaction();
+                    using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
+                    {
+                        cmd.Parameters.Clear();
+                        cmd.CommandText = "INSERT OR REPLACE INTO mtgPP (cardName, setName, price, retailer, priceDate) " +
+                                            "VALUES (@CNAME, @SNAME, @PRICE, @RET, @PDATE)";
+                        cmd.Parameters.AddWithValue("@CNAME", CardIn.CardName);
+                        cmd.Parameters.AddWithValue("@SNAME", CardIn.SetName);
+                        cmd.Parameters.AddWithValue("@PRICE", pp.Price);
+                        cmd.Parameters.AddWithValue("@RET", pp.Retailer);
+                        cmd.Parameters.AddWithValue("@PDATE", pp.Date);
                         sum += cmd.ExecuteNonQuery();
                     }
                     trn.Commit();
@@ -171,9 +236,23 @@ namespace MTGUtils
             SQLiteTransaction trn = MTGDB.BeginTransaction();
             using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
             {
-                cmd.CommandText = "UPDATE mtgSets SET lastUpdate=@DATE where setname=@SNAME";
+                cmd.CommandText = "UPDATE mtgSets SET lastUpdate=@DATE WHERE setname=@SNAME";
                 cmd.Parameters.AddWithValue("@SNAME", SetName);
                 cmd.Parameters.AddWithValue("@DATE", LastCardListUpdate);
+                cmd.ExecuteNonQuery();
+            }
+            trn.Commit();
+        }
+
+        public void UpdateCardLastUpdate(MTGCard CardIn, DateTime LastPPUpdate)
+        {
+            SQLiteTransaction trn = MTGDB.BeginTransaction();
+            using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
+            {
+                cmd.CommandText = "UPDATE mtgCards SET lastUpdate=@DATE WHERE setname=@SNAME AND cardname=@CNAME";
+                cmd.Parameters.AddWithValue("@SNAME", CardIn.SetName);
+                cmd.Parameters.AddWithValue("@CNAME", CardIn.CardName);
+                cmd.Parameters.AddWithValue("@DATE", LastPPUpdate);
                 cmd.ExecuteNonQuery();
             }
             trn.Commit();

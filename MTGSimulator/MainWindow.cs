@@ -46,6 +46,7 @@ namespace MTGUtils
                         foreach (int index in checkedPriceSources)
                             mtgPriceSourceCheckListBox.SetItemChecked(index, true);
                     }
+                    ApplyPriceSourcesToChart();
                 }
                 catch (Exception err)
                 {
@@ -68,7 +69,6 @@ namespace MTGUtils
                     {
                         foreach (int index in checkedMTGSets)
                             mtgSetsCheckedListBox.SetItemChecked(index, true);
-                        log.Debug("Load Call");
                         updateMTGSetsGraphListBox();
                     }
                 }
@@ -127,7 +127,7 @@ namespace MTGUtils
             mtgSetsCheckedListBox.Items.Clear();
             foreach (MTGSet set in sets)
             {
-                mtgSetsCheckedListBox.Items.Add(set.ToString());
+                mtgSetsCheckedListBox.Items.Add(set);
             }
             mtgSetsCheckedListBox.EndUpdate();
             mtgSetsCheckedListBox.Enabled = true;
@@ -247,7 +247,8 @@ namespace MTGUtils
             {
                 foreach (object checkedIndex in mtgSetsCheckedListBox.CheckedItems)
                 {
-                    mtgSetsGraphListBox.Items.Add(checkedIndex);
+                    MTGSet curSet = (MTGSet)checkedIndex;
+                    mtgSetsGraphListBox.Items.Add(curSet);
                 }
             }
             mtgSetsGraphListBox.EndUpdate();
@@ -264,10 +265,19 @@ namespace MTGUtils
             {
                 foreach (MTGCard card in CurCards)
                 {
-                    mtgCardsGraphListBox.Items.Add(card.ToPriceString());
+                    mtgCardsGraphListBox.Items.Add(card);
                 }
             }
             mtgCardsGraphListBox.EndUpdate();
+        }
+
+        private void ApplyPriceSourcesToChart()
+        {
+            mtgPriceChart.Series.Clear();
+            foreach (string checkedIndex in mtgPriceSourceCheckListBox.CheckedItems)
+            {
+                mtgPriceChart.Series.Add(checkedIndex);
+            }
         }
 
     /* Simple function for updating the Status bar at the bottom of the window */
@@ -284,18 +294,50 @@ namespace MTGUtils
             {
                 return;
             }
-            string SetName = mtgSetsGraphListBox.SelectedItem.ToString();
-            UpdateStatusLabel("Status: Fetching info for " + SetName);
-            List<MTGCard> Cards = DM.GetCardListForSet(SetName);
+            MTGSet curSet = (MTGSet)mtgSetsGraphListBox.SelectedItem;
+            UpdateStatusLabel("Status: Fetching info for " + curSet.ToString());
+            List<MTGCard> Cards = DM.GetCardListForSet(curSet);
             UpdateStatusLabel("Status: Complete");
 
             if (Cards != null)
             {
                 updateMTGCardsGraphListBox(Cards);
+                foreach (MTGCard card in Cards)
+                {
+                    log.Debug(card.CardName + " $" + card.Price);
+                }
             }
             else
             {
-                UpdateStatusLabel("Status: Error retrieving card list for set " + SetName);
+                UpdateStatusLabel("Status: Error retrieving card list for set " + curSet.ToString());
+            }
+        }
+
+        /* When a different card is selected, Fetch PricePoints if needed, update chart variables and splitContainerBottomGraph.panel2 */
+        private void mtgCardsGraphListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (mtgCardsGraphListBox.SelectedItem == null)
+            {
+                return;
+            }
+            MTGCard curCard = (MTGCard)mtgCardsGraphListBox.SelectedItem;
+
+            // Update the Title
+            mtgPriceChart.Titles.Clear();
+            mtgPriceChart.Titles.Add(curCard.ToString());
+
+            // Fetch the Price Points if required
+            UpdateStatusLabel("Status: Fetching info for " + curCard.ToString());
+            List<PricePoint> PP = DM.GetPricePointsForCard(curCard);
+            UpdateStatusLabel("Status: Complete");
+
+            if (PP != null)
+            {
+                // TODO use the PricePoints to populate the graph.
+            }
+            else
+            {
+                UpdateStatusLabel("Status: Error retrieving price points for card " + curCard.ToString());
             }
         }
 
@@ -313,5 +355,20 @@ namespace MTGUtils
             updateMTGSetsGraphListBox();
         }
 
+        /*
+         * This event fires before the CheckedItems are updated. 
+         * So disable event checker, update the CheckedItems and re-enable event checker and continue
+         */
+        private void mtgPriceSourceCheckListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            CheckedListBox clb = (CheckedListBox)sender;
+            clb.ItemCheck -= mtgPriceSourceCheckListBox_ItemCheck;
+            clb.SetItemCheckState(e.Index, e.NewValue);
+            clb.ItemCheck += mtgPriceSourceCheckListBox_ItemCheck;
+
+            ApplyPriceSourcesToChart();
+        }
+
+        
     }
 }

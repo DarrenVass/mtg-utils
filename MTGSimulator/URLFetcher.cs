@@ -24,7 +24,7 @@ namespace MTGUtils
 
         public string Fetch()
         {
-            log.Debug("Fetching URL : " + URL);
+            log.Info("Fetching URL : " + URL);
             WebRequest req = WebRequest.Create(URL);
             req.Method = "GET";
             WebResponse resp = req.GetResponse();
