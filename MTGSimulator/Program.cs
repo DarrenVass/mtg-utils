@@ -16,14 +16,14 @@ namespace MTGUtils
         {
             log4net.Config.XmlConfigurator.Configure();
             ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            log.Debug("===============================================");
-            log.Debug("Starting MTGSimulator");
+            log.Info("===============================================");
+            log.Info("Starting MTGSimulator");
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainWindow());
 
-            log.Debug("Closing MTGSimulator");
+            log.Info("Closing MTGSimulator");
         }
     }
 }

@@ -20,12 +20,13 @@ namespace MTGUtils
         public string URL { get; set; }
         public string FoilURL { get; set; }
         public DateTime LastPricePointUpdate { get; set; }
+        // path to Image is <Program Dir>/Cache/<Set Name>/<Card Name>.jpg
 
-        public MTGCard(string cardNameIn, string setNameIn, UInt64 priceIn)
+        public MTGCard(string CardNameIn, string SetNameIn, UInt64 PriceIn)
         {
-            CardName = cardNameIn;
-            SetName = setNameIn;
-            Price = priceIn;
+            CardName = CardNameIn;
+            SetName = SetNameIn;
+            Price = PriceIn;
         }
 
         public override string ToString()

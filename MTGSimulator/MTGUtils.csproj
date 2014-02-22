@@ -55,6 +55,8 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataFunctions.cs" />
+    <Compile Include="DataFilter.cs" />
     <Compile Include="DataManager.cs" />
     <Compile Include="HTMLParser.cs" />
     <Compile Include="MainWindow.cs">

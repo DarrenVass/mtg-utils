@@ -20,6 +20,7 @@ namespace MTGUtils
     {
         public List<int> PriceSourceState;    // List reflecting which source indices are checked
         public List<int> MTGSetsState;        // List reflecting which MTG set indicies are checked
+        public List<int> DataFilterState;     // List reflecting which data filters are to be applied
     }
 
     public class AppState:IDisposable
@@ -42,16 +43,18 @@ namespace MTGUtils
             StoreAppState();
         }
 
-        public void UpdateAppState(List<int> CheckedPriceSources, List<int> CheckedMTGSets)
+        public void UpdateAppState(List<int> CheckedPriceSources, List<int> CheckedMTGSets, List<int> DataFilters)
         {
             AppData.PriceSourceState = CheckedPriceSources;
             AppData.MTGSetsState = CheckedMTGSets;
+            AppData.DataFilterState = DataFilters;
         }
 
-        public void GetAppState(ref List<int> CheckedPriceSources, ref List<int> CheckedMTGSets)
+        public void GetAppState(ref List<int> CheckedPriceSources, ref List<int> CheckedMTGSets, ref List<int> DataFilters)
         {
             CheckedPriceSources = AppData.PriceSourceState;
             CheckedMTGSets = AppData.MTGSetsState;
+            DataFilters = AppData.DataFilterState;
         }
 
         /* Get File state from the file */

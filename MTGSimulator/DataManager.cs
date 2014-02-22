@@ -16,6 +16,9 @@ namespace MTGUtils
 
         // For Holding Magic Card Data in memory
         private List<MTGSet> Sets;      // Information for ALL sets
+        private MTGCard CurrentCard;
+        private List<PricePoint> CurrentPricePoints;
+
         private DateTime LastSetsUpdate { get; set; }
 
         // For accessing/storing of card data
@@ -23,6 +26,7 @@ namespace MTGUtils
         private string startURL = "http://www.mtgprice.com";
         private SQLWrapper _SQLWrapper;
         private HTMLParser _HTMLParser;
+        private DataFilter _DataFilter;
 
         // For saving/loading of application state data
         private MTGUtils.AppState _ApplicationState;
@@ -31,10 +35,18 @@ namespace MTGUtils
         {
             _SQLWrapper = new SQLWrapper();
             _HTMLParser = new HTMLParser();
+            _DataFilter = new DataFilter();
             _ApplicationState = new MTGUtils.AppState();
 
             log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             Sets = _SQLWrapper.GetSetList();
+            CurrentCard = null;
+            CurrentPricePoints = null;
+        }
+
+        public void Dispose()
+        {
+            _ApplicationState.Dispose();
         }
 
         /* URL fetching/parsing for sets */
@@ -94,6 +106,7 @@ namespace MTGUtils
                 return null;
             }
 
+            CurrentCard = CardIn;
             List<PricePoint> retPP = new List<PricePoint>();
             if (CardIn.LastPricePointUpdate.CompareTo(DateTime.Today) < 0)
             {
@@ -113,28 +126,42 @@ namespace MTGUtils
                 // PricePoints are already up to date, parse from SQL
                 retPP = _SQLWrapper.GetPricePoints(CardIn);
             }
+
+            retPP = retPP.OrderByDescending(pp => pp.Date).ToList();
+            CurrentPricePoints = retPP;
             return retPP;
         }
 
+        public List<PricePoint> ApplyFilters(List<PricePoint> PPIn, FilterTypes FilterTypeIn)
+        {
+             return _DataFilter.ApplyDataFilters(PPIn, FilterTypeIn);
+        }
+
         /* Updating the application state to be stored */
-        public void UpdateAppState(List<int> CheckedPriceSources, List<int> CheckedMTGSets)
+        public void UpdateAppState(List<int> CheckedPriceSources, List<int> CheckedMTGSets, List<int> DataFilters)
         {
-            _ApplicationState.UpdateAppState(CheckedPriceSources, CheckedMTGSets);
+            _ApplicationState.UpdateAppState(CheckedPriceSources, CheckedMTGSets, DataFilters);
         }
 
-        public void GetAppState(ref List<int> CheckedPriceSources, ref List<int> CheckedMTGSets)
+        public void GetAppState(ref List<int> CheckedPriceSources, ref List<int> CheckedMTGSets, ref List<int> DataFilters)
         {
-            _ApplicationState.GetAppState(ref CheckedPriceSources, ref CheckedMTGSets);
+            _ApplicationState.GetAppState(ref CheckedPriceSources, ref CheckedMTGSets, ref DataFilters);
         }
 
-        public void Dispose()
-        {
-            _ApplicationState.Dispose();
-        }
-
+        /* Simple getters for private member variables */
         public List<MTGSet> GetSets()
         {
             return Sets;
+        }
+
+        public MTGCard GetCurrentCard()
+        {
+            return CurrentCard;
+        }
+
+        public List<PricePoint> GetCurrentPricePoints()
+        {
+            return CurrentPricePoints;
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 
 using log4net;
 
@@ -14,12 +15,15 @@ namespace MTGUtils
     public partial class MainWindow : Form
     {
         DataManager DM;
+        DataFunctions DF;
+
         private readonly ILog log;
 
         public MainWindow()
         {
             log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
             DM = new DataManager();
+            DF = new DataFunctions();
             InitializeComponent();
         }
 
@@ -27,32 +31,30 @@ namespace MTGUtils
         {
             List<int> checkedPriceSources = new List<int>();
             List<int> checkedMTGSets = new List<int>();
-            DM.GetAppState(ref checkedPriceSources, ref checkedMTGSets);
+            List<int> checkedDataFilters = new List<int>();
+            DM.GetAppState(ref checkedPriceSources, ref checkedMTGSets, ref checkedDataFilters);
 
-            if (checkedPriceSources != null)
+            try
             {
-                try
+                // Set all or only selected choices.
+                if (checkedPriceSources == null || checkedPriceSources.Count == 0)
                 {
-                    // Set all or only selected choices.
-                    if (checkedPriceSources.Count == 0)
+                    for (int i = 0; i < mtgPriceSourceCheckListBox.Items.Count; i++)
                     {
-                        for (int i = 0; i < mtgPriceSourceCheckListBox.Items.Count; i++)
-                        {
-                            mtgPriceSourceCheckListBox.SetItemChecked(i, true);
-                        }
+                        mtgPriceSourceCheckListBox.SetItemChecked(i, true);
                     }
-                    else
-                    {
-                        foreach (int index in checkedPriceSources)
-                            mtgPriceSourceCheckListBox.SetItemChecked(index, true);
-                    }
-                    ApplyPriceSourcesToChart();
                 }
-                catch (Exception err)
+                else
                 {
-                    // This will typically mean the state is out of date somehow.
-                    log.Warn("Error updating mtgPriceSourceCheckListBox from stored state: " + err);
+                    foreach (int index in checkedPriceSources)
+                        mtgPriceSourceCheckListBox.SetItemChecked(index, true);
                 }
+                ApplyPriceSourcesToChart();
+            }
+            catch (Exception err)
+            {
+                // This will typically mean the state is out of date somehow.
+                log.Warn("Error updating mtgPriceSourceCheckListBox from stored state: " + err);
             }
 
             updateMTGSetsCheckedListBox();
@@ -78,6 +80,20 @@ namespace MTGUtils
                     log.Warn("Error updating mtgSetsCheckedListBox from stored state: " + err);
                 }
             }
+
+            if (checkedDataFilters != null)
+            {
+                try
+                {
+                    foreach (int index in checkedDataFilters)
+                        dataFiltersCheckedListBox.SetItemChecked(index, true);
+                }
+                catch (Exception err)
+                {
+                    // This will typically mean the state is out of date somehow.
+                    log.Warn("Error updating dataFiltersCheckedListBox from stored state: " + err);
+                }
+            }
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -90,7 +106,11 @@ namespace MTGUtils
             foreach (int checkedIndex in mtgSetsCheckedListBox.CheckedIndices)
                 checkedMTGSets.Add(checkedIndex);
 
-            DM.UpdateAppState(checkedPriceSources, checkedMTGSets);
+            List<int> checkedDataFilters = new List<int>();
+            foreach (int checkedIndex in dataFiltersCheckedListBox.CheckedIndices)
+                checkedDataFilters.Add(checkedIndex);
+
+            DM.UpdateAppState(checkedPriceSources, checkedMTGSets, checkedDataFilters);
 
             DM.Dispose();
         }
@@ -236,6 +256,68 @@ namespace MTGUtils
             UnselectAllMTGSetsCheckedListBox();
         }
 
+        private void UpdateGraphWithPricePoints()
+        {
+            MTGCard curCard = DM.GetCurrentCard();
+            List<PricePoint> curPP = DM.GetCurrentPricePoints();
+            if (curCard == null || curPP == null)
+            {
+                // This can be called at the start to update sources when card/PP are null.
+                return;
+            }
+
+            foreach (Series cs in mtgPriceChart.Series)
+                cs.Points.Clear();
+
+            // Apply any filters that are selected
+            FilterTypes tempDataFilters = new FilterTypes();
+            this.PopulateFilterTypes(ref tempDataFilters);
+            curPP = DM.ApplyFilters(curPP, tempDataFilters);
+
+            foreach (PricePoint pp in curPP)
+            {
+                // Only add points for selected retailers
+                if (mtgPriceChart.Series.IsUniqueName(pp.Retailer) == false)
+                {
+                    mtgPriceChart.Series[pp.Retailer].Points.AddXY(pp.Date, pp.Price / 100);
+                }
+            }
+
+            UpdateCardInfoWindow(curPP);
+        }
+
+        private void UpdateCardInfoWindow(List<PricePoint> PPsIn)
+        {
+            UInt64 min = 0, max = 0;
+            DF.GetMinMax(PPsIn, ref min, ref max);
+
+            lblLowPrice.Text = DF.GetPriceFromUInt64(min);
+            lblHighPrice.Text = DF.GetPriceFromUInt64(max);
+
+
+        }
+
+        /*
+         * Convert the dataFiltersCheckedListBox to FilterTypes struct.
+         */
+        private void PopulateFilterTypes(ref FilterTypes Filter)
+        {
+            Filter.NonZero = false;
+            Filter.StdDev = false;
+            Filter.Future = false;
+            Filter.Average = false;
+
+            if (dataFiltersCheckedListBox.GetItemChecked(0))
+                Filter.NonZero = true; ;
+            if (dataFiltersCheckedListBox.GetItemChecked(1))
+                Filter.StdDev = true; ;
+            if (dataFiltersCheckedListBox.GetItemChecked(2))
+                Filter.Average = true; ;
+            if (dataFiltersCheckedListBox.GetItemChecked(3))
+                Filter.Future = true; ;
+            
+        }
+
         /*
          * Updates the elements of the mtgSetsGraphListBox based on checked state of mtgSetsCheckedListBox
          */
@@ -277,7 +359,21 @@ namespace MTGUtils
             foreach (string checkedIndex in mtgPriceSourceCheckListBox.CheckedItems)
             {
                 mtgPriceChart.Series.Add(checkedIndex);
+                mtgPriceChart.Series[checkedIndex].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+                mtgPriceChart.Series[checkedIndex].XValueType = ChartValueType.DateTime;
+                mtgPriceChart.Series[checkedIndex].BorderWidth = 5;
+
+                mtgPriceChart.ChartAreas[0].AxisX.LabelStyle.Format = "yyyy-MM-dd";
+                mtgPriceChart.ChartAreas[0].AxisX.IntervalType = DateTimeIntervalType.Months;
             }
+            // Add average last so it's on top
+            mtgPriceChart.Series.Add("Average");
+            mtgPriceChart.Series["Average"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            mtgPriceChart.Series["Average"].XValueType = ChartValueType.DateTime;
+            mtgPriceChart.Series["Average"].Color = Color.Red;
+            mtgPriceChart.Series["Average"].BorderWidth = 8;
+
+            UpdateGraphWithPricePoints();
         }
 
     /* Simple function for updating the Status bar at the bottom of the window */
@@ -302,10 +398,6 @@ namespace MTGUtils
             if (Cards != null)
             {
                 updateMTGCardsGraphListBox(Cards);
-                foreach (MTGCard card in Cards)
-                {
-                    log.Debug(card.CardName + " $" + card.Price);
-                }
             }
             else
             {
@@ -328,12 +420,12 @@ namespace MTGUtils
 
             // Fetch the Price Points if required
             UpdateStatusLabel("Status: Fetching info for " + curCard.ToString());
-            List<PricePoint> PP = DM.GetPricePointsForCard(curCard);
+            List<PricePoint> PricePoints = DM.GetPricePointsForCard(curCard);
             UpdateStatusLabel("Status: Complete");
-
-            if (PP != null)
+           
+            if (PricePoints != null)
             {
-                // TODO use the PricePoints to populate the graph.
+                UpdateGraphWithPricePoints();
             }
             else
             {
@@ -367,6 +459,20 @@ namespace MTGUtils
             clb.ItemCheck += mtgPriceSourceCheckListBox_ItemCheck;
 
             ApplyPriceSourcesToChart();
+        }
+
+        /*
+         * This event fires before the CheckedItems are updated. 
+         * So disable event checker, update the CheckedItems and re-enable event checker and continue
+         */
+        private void dataFiltersCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            CheckedListBox clb = (CheckedListBox)sender;
+            clb.ItemCheck -= dataFiltersCheckedListBox_ItemCheck;
+            clb.SetItemCheckState(e.Index, e.NewValue);
+            clb.ItemCheck += dataFiltersCheckedListBox_ItemCheck;
+
+            UpdateGraphWithPricePoints();
         }
 
         

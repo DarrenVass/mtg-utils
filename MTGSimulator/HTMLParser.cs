@@ -170,7 +170,12 @@ namespace MTGUtils
             return retCards;
         }
 
-        /* JavaScript is used to populate the tbody, and the formatting on the data is odd. So pretty much just have to search for data */
+        /* 
+         * JavaScript is used to populate the tbody, and the formatting on the data is odd, 
+         * so pretty much just have to search for data and parse manually. The  card image 
+         * is in the "<img id="hero" src=" tag which should be saved to
+         * <Program Dir>/Cache/<Set Name/<Card Name>.jpg
+         */
         public List<PricePoint> ParsePricePoints(string HTMLIn, MTGCard CardIn)
         {
             List<PricePoint> retPP = new List<PricePoint>();
