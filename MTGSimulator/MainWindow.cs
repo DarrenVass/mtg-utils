@@ -302,6 +302,12 @@ namespace MTGUtils
          */
         private void PopulateFilterTypes(ref FilterTypes Filter)
         {
+            Filter.RetailerList = new List<string>();
+            foreach(string retailer in mtgPriceSourceCheckListBox.CheckedItems)
+            {
+                Filter.RetailerList.Add(retailer);
+            }
+
             Filter.NonZero = false;
             Filter.StdDev = false;
             Filter.Future = false;

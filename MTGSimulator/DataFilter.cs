@@ -9,6 +9,7 @@ namespace MTGUtils
 {
     public struct FilterTypes
     {
+        public List<string> RetailerList { get; set; }
         public bool NonZero { get; set; }
         public bool StdDev { get; set; }
         public bool Future { get; set; }
@@ -43,6 +44,8 @@ namespace MTGUtils
         {
             List<PricePoint> DataOut = new List<PricePoint>(DataIn);
 
+            // Always Filter the retailers.
+            RetailerFilter(Filters.RetailerList, ref DataOut);
             if (Filters.NonZero)
                 NonZeroFilter(ref DataOut);
             if (Filters.StdDev)
@@ -53,6 +56,38 @@ namespace MTGUtils
                 AddAverageFilter(ref DataOut);
 
             return DataOut;
+        }
+
+        /*
+         * Remove all price points that don't have retailer on the given list
+         */
+        private List<PricePoint> RetailerFilter(List<string> RetailerList, ref List<PricePoint> DataIn)
+        {
+            List<PricePoint> pointsToRemove = new List<PricePoint>();
+            bool leaveItIn;
+            foreach (PricePoint pp in DataIn)
+            {
+                leaveItIn = false;
+                foreach (string retailer in RetailerList)
+                {
+                    if (pp.Retailer == retailer)
+                    {
+                        leaveItIn = true;
+                        break;
+                    }
+                }
+                if (!leaveItIn)
+                {
+                    pointsToRemove.Add(pp);
+                }
+            }
+
+            foreach (PricePoint pp in pointsToRemove)
+            {
+                DataIn.Remove(pp);
+            }
+
+            return DataIn;
         }
 
         /*
