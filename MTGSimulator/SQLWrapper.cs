@@ -31,7 +31,14 @@ namespace MTGUtils
 
         ~SQLWrapper()
         {
-            MTGDB.Close();
+            try
+            {
+                MTGDB.Close();
+            }
+            catch (System.ObjectDisposedException e)
+            {
+                log.Error("Closed before finished using MTGDB: " + e);
+            }
         }
 
         /* Will create the Set & Card tables if required */
@@ -85,11 +92,12 @@ namespace MTGUtils
         public void UpdateSetList(List<MTGSet> SetsIn)
         {
             int sum = 0;
-            foreach (MTGSet set in SetsIn)
+            try
             {
-                try
+                SQLiteTransaction trn = MTGDB.BeginTransaction();
+                foreach (MTGSet set in SetsIn)
                 {
-                    SQLiteTransaction trn = MTGDB.BeginTransaction();
+                
                     using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
                     {
                         cmd.Parameters.Clear();
@@ -102,12 +110,12 @@ namespace MTGUtils
                         cmd.Parameters.AddWithValue("@Name", set.ToString());
                         sum += cmd.ExecuteNonQuery();
                     }
-                    trn.Commit();
                 }
-                catch (Exception err)
-                {
-                    log.Error("Insert/Update Error:", err);
-                }
+                trn.Commit();
+            }
+            catch (Exception err)
+            {
+                log.Error("Insert/Update Error:", err);
             }
         }
 
@@ -144,11 +152,12 @@ namespace MTGUtils
         public void UpdateCardList(List<MTGCard> CardsIn, string SetName)
         {
             int sum = 0;
-            foreach (MTGCard card in CardsIn)
+            try
             {
-                try
+                SQLiteTransaction trn = MTGDB.BeginTransaction();
+                foreach (MTGCard card in CardsIn)
                 {
-                    SQLiteTransaction trn = MTGDB.BeginTransaction();
+                
                     using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
                     {
                         cmd.Parameters.Clear();
@@ -162,12 +171,12 @@ namespace MTGUtils
                         cmd.Parameters.AddWithValue("@PRICE", card.Price);
                         sum += cmd.ExecuteNonQuery();
                     }
-                    trn.Commit();
                 }
-                catch (Exception err)
-                {
-                    log.Error("Insert/Update Error:", err);
-                }
+                trn.Commit();
+            }
+            catch (Exception err)
+            {
+                log.Error("Insert/Update Error:", err);
             }
         }
 
@@ -205,11 +214,11 @@ namespace MTGUtils
         public void UpdatePricePoints(List<PricePoint> PPsIn, MTGCard CardIn)
         {
             int sum = 0;
-            foreach (PricePoint pp in PPsIn)
+            try
             {
-                try
+                SQLiteTransaction trn = MTGDB.BeginTransaction();
+                foreach (PricePoint pp in PPsIn)
                 {
-                    SQLiteTransaction trn = MTGDB.BeginTransaction();
                     using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
                     {
                         cmd.Parameters.Clear();
@@ -222,12 +231,12 @@ namespace MTGUtils
                         cmd.Parameters.AddWithValue("@PDATE", pp.Date);
                         sum += cmd.ExecuteNonQuery();
                     }
-                    trn.Commit();
                 }
-                catch (Exception err)
-                {
-                    log.Error("Insert/Update Error:", err);
-                }
+                trn.Commit();
+            }
+            catch(Exception err)
+            {
+                log.Error("Insert/Update Error: ", err);
             }
         }
 

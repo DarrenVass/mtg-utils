@@ -269,10 +269,12 @@ namespace MTGUtils
             foreach (Series cs in mtgPriceChart.Series)
                 cs.Points.Clear();
 
+            UpdateStatusLabel("Status: Applying data filters.");
             // Apply any filters that are selected
             FilterTypes tempDataFilters = new FilterTypes();
             this.PopulateFilterTypes(ref tempDataFilters);
             curPP = DM.ApplyFilters(curPP, tempDataFilters);
+            UpdateStatusLabel("Status: Complete");
 
             foreach (PricePoint pp in curPP)
             {
@@ -282,7 +284,7 @@ namespace MTGUtils
                     mtgPriceChart.Series[pp.Retailer].Points.AddXY(pp.Date, pp.Price / 100);
                 }
             }
-
+ 
             UpdateCardInfoWindow(curPP);
         }
 
@@ -321,7 +323,6 @@ namespace MTGUtils
                 Filter.Average = true; ;
             if (dataFiltersCheckedListBox.GetItemChecked(3))
                 Filter.Future = true; ;
-            
         }
 
         /*
@@ -365,7 +366,7 @@ namespace MTGUtils
             foreach (string checkedIndex in mtgPriceSourceCheckListBox.CheckedItems)
             {
                 mtgPriceChart.Series.Add(checkedIndex);
-                mtgPriceChart.Series[checkedIndex].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+                mtgPriceChart.Series[checkedIndex].ChartType = SeriesChartType.Line;
                 mtgPriceChart.Series[checkedIndex].XValueType = ChartValueType.DateTime;
                 mtgPriceChart.Series[checkedIndex].BorderWidth = 5;
 
@@ -374,7 +375,7 @@ namespace MTGUtils
             }
             // Add average last so it's on top
             mtgPriceChart.Series.Add("Average");
-            mtgPriceChart.Series["Average"].ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            mtgPriceChart.Series["Average"].ChartType = SeriesChartType.Line;
             mtgPriceChart.Series["Average"].XValueType = ChartValueType.DateTime;
             mtgPriceChart.Series["Average"].Color = Color.Red;
             mtgPriceChart.Series["Average"].BorderWidth = 8;
@@ -431,6 +432,7 @@ namespace MTGUtils
            
             if (PricePoints != null)
             {
+                log.Error("mtgCardsGraphListBox_SelectedIndexChanged");
                 UpdateGraphWithPricePoints();
             }
             else
@@ -473,6 +475,7 @@ namespace MTGUtils
          */
         private void dataFiltersCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
+            log.Error("dataFiltersCheckedListBox_ItemCheck");
             CheckedListBox clb = (CheckedListBox)sender;
             clb.ItemCheck -= dataFiltersCheckedListBox_ItemCheck;
             clb.SetItemCheckState(e.Index, e.NewValue);

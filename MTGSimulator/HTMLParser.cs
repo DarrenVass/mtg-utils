@@ -19,7 +19,7 @@ namespace MTGUtils
             log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         }
 
-        /* Information stored in '<tbody>' */
+        /* Information stored in the second '<tbody>' */
         public List<MTGSet> ParseSets(string HTMLIn)
         {
             List<MTGSet> retSets = new List<MTGSet>();
@@ -33,140 +33,150 @@ namespace MTGUtils
                 {
                     log.Error("HTMLAgilityPack Error: " + err.ToString());
                 }
+                return null;
             }
-            else
-            {// Success
-                if (htmlDoc.DocumentNode != null)
+
+            if (htmlDoc.DocumentNode != null)
+            {
+                HtmlAgilityPack.HtmlNode bodyNode = htmlDoc.DocumentNode.SelectSingleNode("(//tbody)[2]");
+
+                if (bodyNode != null)
                 {
-                    HtmlAgilityPack.HtmlNode bodyNode = htmlDoc.DocumentNode.SelectSingleNode("//tbody");
-                    if (bodyNode != null)
+                    foreach (HtmlAgilityPack.HtmlNode childNode in bodyNode.ChildNodes)
                     {
-                        foreach (HtmlAgilityPack.HtmlNode childNode in bodyNode.ChildNodes)
-                        {
-                            //FirstNode is URL & Name
-                            HtmlAgilityPack.HtmlNode lineNode = childNode.FirstChild;
-                            string setName = lineNode.InnerText.TrimEnd(' ');
-                            string setURL = lineNode.FirstChild.GetAttributeValue("href", null).TrimEnd(' ');
+                        if (childNode == null)
+                            continue;
+                        //FirstNode is URL & Name
+                        HtmlAgilityPack.HtmlNode lineNode = childNode.FirstChild;
+                        string setName = lineNode.InnerText.TrimEnd(' ');
+                        string setURL = lineNode.FirstChild.GetAttributeValue("href", null).TrimEnd(' ');
+                        log.Error("SetName: " + setName + " SetURL: " + setURL);
 
-                            if (setName.Contains("Foil"))
-                            { /* Foil Set, just add URL */
-                                string setNameWithoutFoil = setName.Replace(" (Foil)", "");
-                                bool isFound = false;
-                                foreach (MTGSet set in retSets)
+                        if (setName.Contains("Foil"))
+                        { /* Foil Set, just add URL */
+                            string setNameWithoutFoil = setName.Replace(" (Foil)", "");
+                            bool isFound = false;
+                            foreach (MTGSet set in retSets)
+                            {
+                                if (set.ToString().CompareTo(setNameWithoutFoil) == 0)
                                 {
-                                    if (set.ToString().CompareTo(setNameWithoutFoil) == 0)
-                                    {
-                                        set.FoilURL = setURL; 
-                                        isFound = true;
-                                    }
-                                }
-
-                                if (!isFound)
-                                {
-                                    log.Warn("Unable to find Non-Foil set for '" + setNameWithoutFoil + "'");
+                                    set.FoilURL = setURL; 
+                                    isFound = true;
                                 }
                             }
-                            else
-                            { /* New Set */
-                                //SecondNode is Set Release Date
-                                lineNode = lineNode.NextSibling;
-                                string date = lineNode.FirstChild.WriteTo();
-                                string[] dates = date.Split('/');
-                                DateTime setDate = new DateTime(Convert.ToInt16(dates[2]),
-                                                                Convert.ToInt16(dates[0]),
-                                                                Convert.ToInt16(dates[1]));
- 
-                                MTGSet tempSet = new MTGSet(setName, setDate);
-                                tempSet.URL = setURL;
-                                retSets.Add(tempSet);
+
+                            if (!isFound)
+                            {
+                                log.Warn("Unable to find Non-Foil set for '" + setNameWithoutFoil + "'");
                             }
                         }
+                        else
+                        { /* New Set */
+                            //SecondNode is Set Release Date
+                            lineNode = lineNode.NextSibling;
+                            string date = lineNode.FirstChild.WriteTo();
+                            string[] dates = date.Split('/');
+                            DateTime setDate = new DateTime(Convert.ToInt16(dates[2]),
+                                                            Convert.ToInt16(dates[0]),
+                                                            Convert.ToInt16(dates[1]));
+ 
+                            MTGSet tempSet = new MTGSet(setName, setDate);
+                            tempSet.URL = setURL;
+                            retSets.Add(tempSet);
+                        }
                     }
-                    else
-                    {
-                        log.Error("Body Node Null");
-                    }
-                                        
-                 }
-                else 
-                { 
-                    log.Error("HTMLDoc Node Null");
                 }
+                else
+                {
+                    log.Error("Body Node Null");
+                }
+                                        
+            }
+            else 
+            { 
+                log.Error("HTMLDoc Node Null");
             }
 
             return retSets;
         }
 
-        /* Information stored in '<tbody>' */
+        /* Information stored in <script> and specific line has "$scope.setList" */
         public List<MTGCard> ParseCardURLs(string HTMLIn, string SetName)
         {
+            log.Debug("ParseCardURLs called.");
             List<MTGCard> retCards = new List<MTGCard>();
 
             HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
             htmlDoc.LoadHtml(HTMLIn.ToString());
+            string result = htmlDoc.DocumentNode.OuterHtml;
 
-            if (htmlDoc.ParseErrors != null && htmlDoc.ParseErrors.Count() > 0)
+            /* As they use a script to display card names/urls/etc no easy way to get the specified line. So big giant string with entire HTML doc inside. */
+
+            int listLocation = result.IndexOf("$scope.setList");
+            int startOfList = result.IndexOf("[{", listLocation);
+            int endOfList = result.IndexOf("}];", startOfList);
+
+            // Off by 2 to remove the '[{'
+            string listOfCards = result.Substring(startOfList + 2, (endOfList - startOfList - 2));
+
+            /* Now we have listOfCards which is of the format:
+             * 
+             * {"cardId":"AEtherlingDragons_MazefalseNM-M","name":"AEtherling","quantity":0,"countForTrade":0,"isFoil":false,"url":"/sets/Dragons_Maze/AEtherling",
+             * "setUrl":"/spoiler_lists/Dragons_Maze","fair_price":0.39,"setName":"Dragons Maze","absoluteChangeSinceYesterday":0.0,"absoluteChangeSinceOneWeekAgo":0.0,
+             * "percentageChangeSinceYesterday":0.0,"percentageChangeSinceOneWeekAgo":0.0,"color":"U","rarity":"R","manna":"4UU","bestVendorBuylist":"UNDEFINED",
+             * "bestVendorBuylistPrice":"0","lowestPrice":"0.33","lowestPriceVendor":"HotSauce Games",
+             * "fullImageUrl":"http://s.mtgprice.com/sets/Dragons_Maze/img/AEtherling.full.jpg"},{},{}
+             */
+
+            string[] stringSeperator = new string[] {"},{"};
+            string[] cardStrings = listOfCards.Split(stringSeperator, StringSplitOptions.None);
+
+            // Now we have each card {INFO} in a string
+
+            foreach (string cardString in cardStrings)
             {
-                foreach (HtmlAgilityPack.HtmlParseError err in htmlDoc.ParseErrors)
+                // Now to break it up into "Tag":"Value" pairs. The value can be numerical as well.
+                string[] infoStringSeperator = new string[] {"\",\"", ",\"" };
+                string[] infoStrings = cardString.Split(infoStringSeperator, StringSplitOptions.None);
+                string cardName = null, setURL = null, price = null;
+
+                foreach (string infoString in infoStrings)
                 {
-                    log.Error("HTMLAgilityPack Error: " + err.ToString());
-                }
-            }
-            else
-            {// Success
-                if (htmlDoc.DocumentNode != null)
-                {
-                    HtmlAgilityPack.HtmlNode bodyNode = htmlDoc.DocumentNode.SelectSingleNode("//tbody");
-                    if (bodyNode != null)
+                    // Now in the format of "TAG":"VALUE"
+                    string[] cleanStringSeperator = new string[] { "\":" };
+                    string[] tagStrings = infoString.Split(cleanStringSeperator, StringSplitOptions.None);
+                    if (tagStrings.Count() != 2)
+                        continue;
+                    if (tagStrings[0] == "name")
                     {
-                        foreach (HtmlAgilityPack.HtmlNode childNode in bodyNode.ChildNodes)
+                        cardName = tagStrings[1].Trim('"');
+                    }
+                    else if (tagStrings[0] == "url")
+                    {
+                        setURL = tagStrings[1].Trim('"');
+                    }
+                    else if (tagStrings[0] == "fair_price")
+                    {
+                        price = tagStrings[1].Trim('"');
+                        if (price.Contains('.'))
                         {
-                            //FirstNode is URL & Name
-
-                            HtmlAgilityPack.HtmlNode lineNode = childNode.FirstChild;
-                            if (lineNode == null) { continue; }
-
-                            string cardName = lineNode.InnerText.TrimEnd(' ');
-                            string setURL = lineNode.FirstChild.GetAttributeValue("href", null).TrimEnd(' ').TrimEnd(' ');
-                            string price = lineNode.NextSibling.InnerText;
-                            
-                            // There are some duplicated entries where the 2nd has price of "%N/A", giving same URL's. Ignore them
-                            if (price.CompareTo("$N/A") == 0) { continue; }
-
-                            // Remove '$' and '.' and make sure cents are 2 digits.
-                            price = price.Replace("$", string.Empty);
-
-                            if(price.Contains('.'))
-                            {
-                                // Price can be $1.23 or $1.2 when it should be $1.20, so need to fix that case.
-                                if (price.Length - price.LastIndexOf('.') == 2)
-                                {
-                                    price += "0";
-                                }
-                                price = price.Replace(".", string.Empty);
-                            }
-                            else
-                            { // Price like $4 when should be $4.00
-                                price = price + "00";
-                            }
-
-                            MTGCard tempCard = new MTGCard(cardName, SetName, Convert.ToUInt64(price));
-                            tempCard.URL = setURL;
-                            retCards.Add(tempCard);
+                            if (price.Length - price.LastIndexOf('.') == 2) // Adjust "1.X" to "1.X0"
+                                price += "0";
+                            price = price.Replace(".", string.Empty);
                         }
+                        else
+                        {
+                            price = price + "00"; // Adjust "X" to "X00"
+                        }
+                        
                     }
-                    else
-                    {
-                        log.Error("Body Node Null");
-                    }
+                }
 
-                }
-                else
-                {
-                    log.Error("HTMLDoc Node Null");
-                }
+                MTGCard tempCard = new MTGCard(cardName, SetName, Convert.ToUInt64(price));
+                tempCard.URL = setURL;
+                retCards.Add(tempCard);
             }
-
+            
             return retCards;
         }
 
@@ -181,13 +191,13 @@ namespace MTGUtils
             List<PricePoint> retPP = new List<PricePoint>();
 
             // Double check formatting
-            if(HTMLIn.Contains("var results = [{") == false || HTMLIn.Contains("var sellPriceData = [") == false)
+            if(HTMLIn.Contains("var results = [") == false || HTMLIn.Contains("var sellPriceData = [") == false)
             {
                 log.Error("MTGPrice.com PricePoints formatting has been changed. Need to update the application.");
                 return null;
             }
 
-            int start = HTMLIn.IndexOf("var results = [{");
+            int start = HTMLIn.IndexOf("var results = [");
             int end = HTMLIn.IndexOf("var sellPriceData = [");
 
             if (start == -1 || end == -1)
@@ -199,9 +209,11 @@ namespace MTGUtils
             /*
              *  Formatting Example:
              *  {
-             *  "color": "rgb(140,172,198)",
-             *  "label": "HotSauce Games - $19.99",
-             *   "data": [[1379804931252,29.99],[1379964574414,29.99]]},
+             *      "color": "rgb(140,172,198)",
+             *      "label": "HotSauce Games - $19.99",
+             *      "lines": { "show": true, "fill": true },
+             *      "data": [[1379804931252,29.99],[1379964574414,29.99]]
+             *   },
              *   
              * The above group repeats per Retailer
              */
@@ -223,34 +235,40 @@ namespace MTGUtils
 
                 int commaIndex = relevantData.IndexOf(',', labelIndex);
                 string retailerName = relevantData.Substring((labelIndex + labelString.Length), commaIndex - labelIndex - labelString.Length);
+                
                 // Format is now '"<NAME>" - $<PRICE>', remove quotes, and everything after name.
                 retailerName = retailerName.Substring(1, retailerName.IndexOf(" -") - 1);
-
-                // Start at Index 1, as the 2nd-Xth strings will be "}DATA"
-                int endIndex = relevantData.IndexOf('}', 1);
-
+                
                 int dataIndex = relevantData.IndexOf(dataString);
+                // Start at Index 1, as the 2nd-Xth strings will be "}DATA"
+                int endIndex = relevantData.IndexOf('}', dataIndex);
 
                 // Put just the price points into [DATE,PRICE],[DATE,PRICE] format and 
                 // Trim the first/last '[' and ']'
                 string pureData = relevantData.Substring(dataIndex + dataString.Length , endIndex - dataIndex - dataString.Length);
-                // Split based on delimiter "],[" and use "[[" and "]]" to remove first/last double brackets and then remove emptry entries
-                // The "[]" case takes care of empty brackets
-                string[] delim = new string[] { "],[", "[[", "]]", "[]" };
-                string [] splitData = pureData.Split(delim, StringSplitOptions.RemoveEmptyEntries);
-
-                // Data is now formatted as '[DATE,PRICE]'
-                foreach (string point in splitData)
+                pureData = pureData.Replace(" ", string.Empty);
+                pureData = pureData.Replace("\r", string.Empty);
+                pureData = pureData.Replace("\n", string.Empty);
+                if (pureData != null && pureData != "[]")
                 {
-                    PricePoint tempPP = new PricePoint();
-                    tempPP.Retailer = retailerName;
+                    // Split based on delimiter "],[" and use "[[" and "]]" to remove first/last double brackets and then remove emptry entries
+                    // The "[]" case takes care of empty brackets
+                    string[] delim = new string[] { "],[", "[[", "]]", "[]" };
+                    string[] splitData = pureData.Split(delim, StringSplitOptions.RemoveEmptyEntries);
 
-                    // Convert from Milliseconds since Unix Epoch to DateTime
-                    string[] splitPoint = point.Split(',');
-                    tempPP.Date = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                    tempPP.Date = tempPP.Date.AddSeconds(Convert.ToDouble(splitPoint[0]) / 1000).ToLocalTime();
-                    tempPP.Price = Convert.ToUInt64(splitPoint[1].Replace(".", ""));
-                    retPP.Add(tempPP);
+                    // Data is now formatted as '[DATE,PRICE]'
+                    foreach (string point in splitData)
+                    {
+                        PricePoint tempPP = new PricePoint();
+                        tempPP.Retailer = retailerName;
+
+                        // Convert from Milliseconds since Unix Epoch to DateTime
+                        string[] splitPoint = point.Split(',');
+                        tempPP.Date = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+                        tempPP.Date = tempPP.Date.AddSeconds(Convert.ToDouble(splitPoint[0]) / 1000).ToLocalTime();
+                        tempPP.Price = Convert.ToUInt64(splitPoint[1].Replace(".", ""));
+                        retPP.Add(tempPP);
+                    }
                 }
 
                 relevantData = relevantData.Substring(endIndex);

@@ -30,7 +30,7 @@
         {
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Title title1 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.mainTabs = new System.Windows.Forms.TabPage();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerTopMain = new System.Windows.Forms.SplitContainer();
@@ -52,7 +52,6 @@
             this.mtgSetsGraphListBox = new System.Windows.Forms.ListBox();
             this.mtgCardsGraphListBox = new System.Windows.Forms.ListBox();
             this.splitContainerBottomGraph = new System.Windows.Forms.SplitContainer();
-            this.mtgPriceChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.splitContainerCardInfo = new System.Windows.Forms.SplitContainer();
             this.pictureBoxCard = new System.Windows.Forms.PictureBox();
             this.lblLowPrice = new System.Windows.Forms.Label();
@@ -65,29 +64,36 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.mainTab = new System.Windows.Forms.TabControl();
+            this.mtgPriceChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.mainTabs.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
             this.splitContainerMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopMain)).BeginInit();
             this.splitContainerTopMain.Panel1.SuspendLayout();
             this.splitContainerTopMain.Panel2.SuspendLayout();
             this.splitContainerTopMain.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopSourcesSetsCheckBoxes)).BeginInit();
             this.splitContainerTopSourcesSetsCheckBoxes.Panel1.SuspendLayout();
             this.splitContainerTopSourcesSetsCheckBoxes.Panel2.SuspendLayout();
             this.splitContainerTopSourcesSetsCheckBoxes.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerBottomMain)).BeginInit();
             this.splitContainerBottomMain.Panel1.SuspendLayout();
             this.splitContainerBottomMain.Panel2.SuspendLayout();
             this.splitContainerBottomMain.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerGraphSetsCards)).BeginInit();
             this.splitContainerGraphSetsCards.Panel1.SuspendLayout();
             this.splitContainerGraphSetsCards.Panel2.SuspendLayout();
             this.splitContainerGraphSetsCards.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerBottomGraph)).BeginInit();
             this.splitContainerBottomGraph.Panel1.SuspendLayout();
             this.splitContainerBottomGraph.Panel2.SuspendLayout();
             this.splitContainerBottomGraph.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.mtgPriceChart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerCardInfo)).BeginInit();
             this.splitContainerCardInfo.Panel1.SuspendLayout();
             this.splitContainerCardInfo.Panel2.SuspendLayout();
             this.splitContainerCardInfo.SuspendLayout();
@@ -96,6 +102,7 @@
             this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.mainTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.mtgPriceChart)).BeginInit();
             this.SuspendLayout();
             // 
             // mainTabs
@@ -363,7 +370,7 @@
             this.mtgSetsGraphListBox.FormattingEnabled = true;
             this.mtgSetsGraphListBox.Location = new System.Drawing.Point(0, 0);
             this.mtgSetsGraphListBox.Name = "mtgSetsGraphListBox";
-            this.mtgSetsGraphListBox.Size = new System.Drawing.Size(230, 251);
+            this.mtgSetsGraphListBox.Size = new System.Drawing.Size(230, 254);
             this.mtgSetsGraphListBox.TabIndex = 0;
             this.mtgSetsGraphListBox.SelectedIndexChanged += new System.EventHandler(this.mtgSetsGraphListBox_SelectedIndexChanged);
             // 
@@ -373,7 +380,7 @@
             this.mtgCardsGraphListBox.FormattingEnabled = true;
             this.mtgCardsGraphListBox.Location = new System.Drawing.Point(0, 0);
             this.mtgCardsGraphListBox.Name = "mtgCardsGraphListBox";
-            this.mtgCardsGraphListBox.Size = new System.Drawing.Size(230, 303);
+            this.mtgCardsGraphListBox.Size = new System.Drawing.Size(230, 307);
             this.mtgCardsGraphListBox.TabIndex = 0;
             this.mtgCardsGraphListBox.SelectedIndexChanged += new System.EventHandler(this.mtgCardsGraphListBox_SelectedIndexChanged);
             // 
@@ -396,33 +403,6 @@
             this.splitContainerBottomGraph.Size = new System.Drawing.Size(1176, 569);
             this.splitContainerBottomGraph.SplitterDistance = 940;
             this.splitContainerBottomGraph.TabIndex = 0;
-            // 
-            // mtgPriceChart
-            // 
-            this.mtgPriceChart.BorderlineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Solid;
-            chartArea1.AxisX.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.True;
-            chartArea1.AxisX.IsLabelAutoFit = false;
-            chartArea1.AxisX.LabelStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            chartArea1.AxisX.Title = "Time";
-            chartArea1.AxisX2.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
-            chartArea1.AxisY.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.True;
-            chartArea1.AxisY.Title = "Price";
-            chartArea1.AxisY2.Enabled = System.Windows.Forms.DataVisualization.Charting.AxisEnabled.False;
-            chartArea1.Name = "graphMainChartArea";
-            this.mtgPriceChart.ChartAreas.Add(chartArea1);
-            this.mtgPriceChart.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.mtgPriceChart.Legends.Add(legend1);
-            this.mtgPriceChart.Location = new System.Drawing.Point(0, 0);
-            this.mtgPriceChart.Name = "mtgPriceChart";
-            this.mtgPriceChart.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.Bright;
-            this.mtgPriceChart.Size = new System.Drawing.Size(938, 567);
-            this.mtgPriceChart.TabIndex = 0;
-            this.mtgPriceChart.Text = "Pricing Chart";
-            title1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            title1.Name = "graphMainTitle";
-            title1.Text = "Price History for <Please Select a Card>";
-            this.mtgPriceChart.Titles.Add(title1);
             // 
             // splitContainerCardInfo
             // 
@@ -555,6 +535,23 @@
             this.mainTab.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.mainTab.TabIndex = 0;
             // 
+            // mtgPriceChart
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.mtgPriceChart.ChartAreas.Add(chartArea1);
+            this.mtgPriceChart.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend1.Name = "Legend1";
+            this.mtgPriceChart.Legends.Add(legend1);
+            this.mtgPriceChart.Location = new System.Drawing.Point(0, 0);
+            this.mtgPriceChart.Name = "mtgPriceChart";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.mtgPriceChart.Series.Add(series1);
+            this.mtgPriceChart.Size = new System.Drawing.Size(938, 567);
+            this.mtgPriceChart.TabIndex = 0;
+            this.mtgPriceChart.Text = "chart1";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -564,35 +561,41 @@
             this.Name = "MainWindow";
             this.Text = "Jolly MTG";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_FormClosing);
+            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.mainTabs.ResumeLayout(false);
             this.mainTabs.PerformLayout();
             this.splitContainerMain.Panel1.ResumeLayout(false);
             this.splitContainerMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
             this.splitContainerMain.ResumeLayout(false);
             this.splitContainerTopMain.Panel1.ResumeLayout(false);
             this.splitContainerTopMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopMain)).EndInit();
             this.splitContainerTopMain.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.splitContainerTopSourcesSetsCheckBoxes.Panel1.ResumeLayout(false);
             this.splitContainerTopSourcesSetsCheckBoxes.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopSourcesSetsCheckBoxes)).EndInit();
             this.splitContainerTopSourcesSetsCheckBoxes.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.splitContainerBottomMain.Panel1.ResumeLayout(false);
             this.splitContainerBottomMain.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerBottomMain)).EndInit();
             this.splitContainerBottomMain.ResumeLayout(false);
             this.splitContainerGraphSetsCards.Panel1.ResumeLayout(false);
             this.splitContainerGraphSetsCards.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerGraphSetsCards)).EndInit();
             this.splitContainerGraphSetsCards.ResumeLayout(false);
             this.splitContainerBottomGraph.Panel1.ResumeLayout(false);
             this.splitContainerBottomGraph.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerBottomGraph)).EndInit();
             this.splitContainerBottomGraph.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.mtgPriceChart)).EndInit();
             this.splitContainerCardInfo.Panel1.ResumeLayout(false);
             this.splitContainerCardInfo.Panel2.ResumeLayout(false);
             this.splitContainerCardInfo.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerCardInfo)).EndInit();
             this.splitContainerCardInfo.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCard)).EndInit();
             this.windowStatusStrip.ResumeLayout(false);
@@ -601,6 +604,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.mainTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.mtgPriceChart)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -632,7 +636,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabControl mainTab;
         private System.Windows.Forms.SplitContainer splitContainerBottomGraph;
-        private System.Windows.Forms.DataVisualization.Charting.Chart mtgPriceChart;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckedListBox dataFiltersCheckedListBox;
         private System.Windows.Forms.SplitContainer splitContainerCardInfo;
@@ -641,7 +644,7 @@
         private System.Windows.Forms.Label lblHighPrice;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
-
+        private System.Windows.Forms.DataVisualization.Charting.Chart mtgPriceChart;
     }
 }
 
