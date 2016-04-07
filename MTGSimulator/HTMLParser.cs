@@ -264,7 +264,7 @@ namespace MTGUtils
                 
                 // Format is now '"<NAME>" - $<PRICE>', remove quotes, and everything after name.
                 retailerName = retailerName.Substring(1, retailerName.IndexOf(" -") - 1);
-                
+               
                 int dataIndex = relevantData.IndexOf(dataString);
                 // Start at Index 1, as the 2nd-Xth strings will be "}DATA"
                 int endIndex = relevantData.IndexOf('}', dataIndex);
@@ -275,7 +275,7 @@ namespace MTGUtils
                 pureData = pureData.Replace(" ", string.Empty);
                 pureData = pureData.Replace("\r", string.Empty);
                 pureData = pureData.Replace("\n", string.Empty);
-                if (pureData != null && pureData != "[]")
+                if (pureData != null && pureData != "[]" && retailerName != "Best BUYLIST Price")
                 {
                     // Split based on delimiter "],[" and use "[[" and "]]" to remove first/last double brackets and then remove emptry entries
                     // The "[]" case takes care of empty brackets

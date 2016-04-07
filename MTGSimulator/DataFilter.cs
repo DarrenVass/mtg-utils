@@ -153,7 +153,7 @@ namespace MTGUtils
                     // New day to get average for
                     curDate = pp.Date;
                     sum += pp.Price;
-                    count++;
+                    count = 1;
                 }
                 else if (curDate.Day == pp.Date.Day && curDate.Month == pp.Date.Month && curDate.Year == pp.Date.Year)
                 {
