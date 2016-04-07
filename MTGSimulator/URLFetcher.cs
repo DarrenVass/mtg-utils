@@ -34,5 +34,24 @@ namespace MTGUtils
             resp.Close();
             return content;
         }
+
+        public void FetchImage(string StoragePath)
+        {
+            HttpWebRequest lxRequest = (HttpWebRequest)WebRequest.Create(this.URL);
+
+            // returned values are returned as a stream, then read into a string
+            String lsResponse = string.Empty;
+            using (HttpWebResponse lxResponse = (HttpWebResponse)lxRequest.GetResponse())
+            {
+                using (BinaryReader reader = new BinaryReader(lxResponse.GetResponseStream()))
+                {
+                    Byte[] lnByte = reader.ReadBytes(1 * 1024 * 1024 * 10);
+                    using (FileStream lxFS = new FileStream(StoragePath, FileMode.Create))
+                    {
+                        lxFS.Write(lnByte, 0, lnByte.Length);
+                    }
+                }
+            }
+        }
     }
 }

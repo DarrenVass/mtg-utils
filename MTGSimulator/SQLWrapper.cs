@@ -50,7 +50,7 @@ namespace MTGUtils
             cmd1.ExecuteNonQuery();
 
             string createCardTable = "CREATE TABLE IF NOT EXISTS mtgCards(cardName varchar(256) NOT NULL PRIMARY KEY, setName varchar(256) NOT NULL," +
-                                        "price int, url varchar(256), foilURL varchar(256), lastUpdate date);";
+                                        "price int, url varchar(256), foilURL varchar(256), imageURL varchar(256), lastUpdate date);";
             SQLiteCommand cmd2 = new SQLiteCommand(createCardTable, MTGDB);
             cmd2.ExecuteNonQuery();
 
@@ -137,6 +137,7 @@ namespace MTGUtils
                         card.LastPricePointUpdate = (DateTime)rdr["lastUpdate"];
                         card.URL = rdr["url"].ToString();
                         card.FoilURL = rdr["foilURL"].ToString();
+                        card.CardImageURL = rdr["imageURL"].ToString();
                         retCards.Add(card);
                     }
                 }
@@ -161,10 +162,11 @@ namespace MTGUtils
                     using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
                     {
                         cmd.Parameters.Clear();
-                        cmd.CommandText = "INSERT OR REPLACE INTO mtgCards (cardName, setName, price, url, foilURL, lastUpdate) " +
-                                            "VALUES (@CNAME, @SNAME, @PRICE, @URL, @FURL, @LU)";
+                        cmd.CommandText = "INSERT OR REPLACE INTO mtgCards (cardName, setName, price, url, foilURL, imageURL, lastUpdate) " +
+                                            "VALUES (@CNAME, @SNAME, @PRICE, @URL, @FURL, @IURL, @LU)";
                         cmd.Parameters.AddWithValue("@URL", card.URL);
                         cmd.Parameters.AddWithValue("@FURL", card.FoilURL);
+                        cmd.Parameters.AddWithValue("@IURL", card.CardImageURL);
                         cmd.Parameters.AddWithValue("@LU", card.LastPricePointUpdate);
                         cmd.Parameters.AddWithValue("@CName", card.CardName);
                         cmd.Parameters.AddWithValue("@SName", card.SetName);
@@ -242,29 +244,44 @@ namespace MTGUtils
 
         public void UpdateSetLastUpdate(string SetName, DateTime LastCardListUpdate)
         {
-            SQLiteTransaction trn = MTGDB.BeginTransaction();
-            using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
+            try
             {
-                cmd.CommandText = "UPDATE mtgSets SET lastUpdate=@DATE WHERE setname=@SNAME";
-                cmd.Parameters.AddWithValue("@SNAME", SetName);
-                cmd.Parameters.AddWithValue("@DATE", LastCardListUpdate);
-                cmd.ExecuteNonQuery();
+                SQLiteTransaction trn = MTGDB.BeginTransaction();
+                using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
+                {
+                    cmd.CommandText = "UPDATE mtgSets SET lastUpdate=@DATE WHERE setname=@SNAME";
+                    cmd.Parameters.AddWithValue("@SNAME", SetName);
+                    cmd.Parameters.AddWithValue("@DATE", LastCardListUpdate);
+                    cmd.ExecuteNonQuery();
+                }
+                trn.Commit();
             }
-            trn.Commit();
+            catch (Exception err)
+            {
+                log.Error("UpdateSetLastUpdate error: ", err);
+            }
         }
 
         public void UpdateCardLastUpdate(MTGCard CardIn, DateTime LastPPUpdate)
         {
-            SQLiteTransaction trn = MTGDB.BeginTransaction();
-            using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
+            try
             {
-                cmd.CommandText = "UPDATE mtgCards SET lastUpdate=@DATE WHERE setname=@SNAME AND cardname=@CNAME";
-                cmd.Parameters.AddWithValue("@SNAME", CardIn.SetName);
-                cmd.Parameters.AddWithValue("@CNAME", CardIn.CardName);
-                cmd.Parameters.AddWithValue("@DATE", LastPPUpdate);
-                cmd.ExecuteNonQuery();
+                SQLiteTransaction trn = MTGDB.BeginTransaction();
+                using (SQLiteCommand cmd = new SQLiteCommand(MTGDB))
+                {
+                    cmd.CommandText = "UPDATE mtgCards SET lastUpdate=@DATE, imageURL=@IURL WHERE setname=@SNAME AND cardname=@CNAME";
+                    cmd.Parameters.AddWithValue("@SNAME", CardIn.SetName);
+                    cmd.Parameters.AddWithValue("@CNAME", CardIn.CardName);
+                    cmd.Parameters.AddWithValue("@DATE", LastPPUpdate);
+                    cmd.Parameters.AddWithValue("@IURL", CardIn.CardImageURL);
+                    cmd.ExecuteNonQuery();
+                }
+                trn.Commit();
             }
-            trn.Commit();
-        }
+            catch (Exception err)
+            {
+                log.Error("UpdateCardLastUpdate error: ", err);
+            }
+}
     }
 }

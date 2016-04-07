@@ -10,7 +10,6 @@ namespace MTGUtils
     public struct FilterTypes
     {
         public List<string> RetailerList { get; set; }
-        public bool NonZero { get; set; }
         public bool StdDev { get; set; }
         public bool Future { get; set; }
         public bool Average { get; set; }
@@ -26,10 +25,12 @@ namespace MTGUtils
     public class DataFilter
     {
         private readonly ILog log;
+        private string MTGUtilsAverage; // 
 
         public DataFilter()
         {
             log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            MTGUtilsAverage = "Average"; // The retailer for the Average function.
         }
 
         /*
@@ -45,9 +46,6 @@ namespace MTGUtils
             List<PricePoint> DataOut = new List<PricePoint>(DataIn);
 
             // Always Filter the retailers.
-            RetailerFilter(Filters.RetailerList, ref DataOut);
-            if (Filters.NonZero)
-                NonZeroFilter(ref DataOut);
             if (Filters.StdDev)
                 StdDevFilter(ref DataOut);
             if (Filters.Future)
@@ -56,48 +54,6 @@ namespace MTGUtils
                 AddAverageFilter(ref DataOut);
 
             return DataOut;
-        }
-
-        /*
-         * Remove all price points that don't have retailer on the given list
-         */
-        private List<PricePoint> RetailerFilter(List<string> RetailerList, ref List<PricePoint> DataIn)
-        {
-            List<PricePoint> pointsToRemove = new List<PricePoint>();
-            bool leaveItIn;
-            foreach (PricePoint pp in DataIn)
-            {
-                leaveItIn = false;
-                foreach (string retailer in RetailerList)
-                {
-                    if (pp.Retailer == retailer)
-                    {
-                        leaveItIn = true;
-                        break;
-                    }
-                }
-                if (!leaveItIn)
-                {
-                    pointsToRemove.Add(pp);
-                }
-            }
-
-            foreach (PricePoint pp in pointsToRemove)
-            {
-                DataIn.Remove(pp);
-            }
-
-            return DataIn;
-        }
-
-        /*
-         * Remove all price points with Price=$0.00
-         */
-        private List<PricePoint> NonZeroFilter(ref List<PricePoint> DataIn)
-        {
-            DataIn.RemoveAll(pp => pp.Price == 0);
-
-            return DataIn;
         }
 
         private UInt64 CalculateStdDev(List<PricePoint> DataIn, ref UInt64 AvgOut)
@@ -178,7 +134,6 @@ namespace MTGUtils
          */
         private List<PricePoint> AddFutureFilter(ref List<PricePoint> DataIn)
         {
-
             return DataIn;
         }
 
@@ -195,24 +150,24 @@ namespace MTGUtils
             {
                 if (curDate == DateTime.MinValue)
                 {
-                    // New Date to get average for
+                    // New day to get average for
                     curDate = pp.Date;
                     sum += pp.Price;
                     count++;
                 }
-                else if (curDate == pp.Date)
+                else if (curDate.Day == pp.Date.Day && curDate.Month == pp.Date.Month && curDate.Year == pp.Date.Year)
                 {
-                    // Another PP for current date
+                    // Another PP for current day
                     sum += pp.Price;
                     count++;
                 }
                 else
                 {
-                    // New Date, so get average and insert it at appropriate place.
+                    // New day, so get average and insert it at appropriate place.
                     PricePoint newAvg = new PricePoint();
                     newAvg.Date = curDate;
                     newAvg.Price = (UInt64)(sum / count);
-                    newAvg.Retailer = "Average";
+                    newAvg.Retailer = MTGUtilsAverage;
 
                     listToAdd.Add(newAvg);
 

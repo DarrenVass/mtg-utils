@@ -281,7 +281,7 @@ namespace MTGUtils
                 // Only add points for selected retailers
                 if (mtgPriceChart.Series.IsUniqueName(pp.Retailer) == false)
                 {
-                    mtgPriceChart.Series[pp.Retailer].Points.AddXY(pp.Date, pp.Price / 100);
+                    mtgPriceChart.Series[pp.Retailer].Points.AddXY(pp.Date, (double)pp.Price / 100);
                 }
             }
  
@@ -310,18 +310,15 @@ namespace MTGUtils
                 Filter.RetailerList.Add(retailer);
             }
 
-            Filter.NonZero = false;
             Filter.StdDev = false;
             Filter.Future = false;
             Filter.Average = false;
 
             if (dataFiltersCheckedListBox.GetItemChecked(0))
-                Filter.NonZero = true; ;
-            if (dataFiltersCheckedListBox.GetItemChecked(1))
                 Filter.StdDev = true; ;
-            if (dataFiltersCheckedListBox.GetItemChecked(2))
+            if (dataFiltersCheckedListBox.GetItemChecked(1))
                 Filter.Average = true; ;
-            if (dataFiltersCheckedListBox.GetItemChecked(3))
+            if (dataFiltersCheckedListBox.GetItemChecked(2))
                 Filter.Future = true; ;
         }
 
@@ -432,13 +429,14 @@ namespace MTGUtils
            
             if (PricePoints != null)
             {
-                log.Error("mtgCardsGraphListBox_SelectedIndexChanged");
                 UpdateGraphWithPricePoints();
             }
             else
             {
                 UpdateStatusLabel("Status: Error retrieving price points for card " + curCard.ToString());
             }
+
+            pictureBoxCard.Load(curCard.CardImageURL);
         }
 
         /*
@@ -475,7 +473,6 @@ namespace MTGUtils
          */
         private void dataFiltersCheckedListBox_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            log.Error("dataFiltersCheckedListBox_ItemCheck");
             CheckedListBox clb = (CheckedListBox)sender;
             clb.ItemCheck -= dataFiltersCheckedListBox_ItemCheck;
             clb.SetItemCheckState(e.Index, e.NewValue);

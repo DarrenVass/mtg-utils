@@ -50,7 +50,6 @@ namespace MTGUtils
                         HtmlAgilityPack.HtmlNode lineNode = childNode.FirstChild;
                         string setName = lineNode.InnerText.TrimEnd(' ');
                         string setURL = lineNode.FirstChild.GetAttributeValue("href", null).TrimEnd(' ');
-                        log.Error("SetName: " + setName + " SetURL: " + setURL);
 
                         if (setName.Contains("Foil"))
                         { /* Foil Set, just add URL */
@@ -103,7 +102,6 @@ namespace MTGUtils
         /* Information stored in <script> and specific line has "$scope.setList" */
         public List<MTGCard> ParseCardURLs(string HTMLIn, string SetName)
         {
-            log.Debug("ParseCardURLs called.");
             List<MTGCard> retCards = new List<MTGCard>();
 
             HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
@@ -129,6 +127,7 @@ namespace MTGUtils
              */
 
             string[] stringSeperator = new string[] {"},{"};
+            listOfCards = listOfCards.Replace("\\u0027", "'");
             string[] cardStrings = listOfCards.Split(stringSeperator, StringSplitOptions.None);
 
             // Now we have each card {INFO} in a string
@@ -162,6 +161,8 @@ namespace MTGUtils
                         {
                             if (price.Length - price.LastIndexOf('.') == 2) // Adjust "1.X" to "1.X0"
                                 price += "0";
+                            else if (price.Length - price.LastIndexOf('.') > 3) // Adjust "1.XXxxxxxx" to "1.XX"
+                                price = price.Substring(0, price.LastIndexOf('.') + 3);
                             price = price.Replace(".", string.Empty);
                         }
                         else
@@ -180,11 +181,31 @@ namespace MTGUtils
             return retCards;
         }
 
+        /*
+         * Called to save the URL of the card image.
+         * Format of: 
+         * <meta property = "og:image" content="http://s.mtgprice.com/sets/Magic_Origins/img/Jace, Vryn's Prodigy.full.jpg" />
+         */
+        private void ParseCardImage(string HTMLIn, MTGCard CardIn)
+        {
+            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
+            htmlDoc.LoadHtml(HTMLIn.ToString());
+            HtmlAgilityPack.HtmlNode imageNode = htmlDoc.DocumentNode.SelectSingleNode("//meta[@property = 'og:image']");
+            
+            foreach(HtmlAgilityPack.HtmlAttribute att in imageNode.Attributes)
+            {
+                if(att.Name == "content")
+                {
+                    CardIn.CardImageURL = att.Value;
+                }
+            }           
+        }
+
+
         /* 
          * JavaScript is used to populate the tbody, and the formatting on the data is odd, 
-         * so pretty much just have to search for data and parse manually. The  card image 
-         * is in the "<img id="hero" src=" tag which should be saved to
-         * <Program Dir>/Cache/<Set Name/<Card Name>.jpg
+         * so pretty much just have to search for data and parse manually. 
+         * Ignore all zero priced data as it's useless.
          */
         public List<PricePoint> ParsePricePoints(string HTMLIn, MTGCard CardIn)
         {
@@ -195,6 +216,11 @@ namespace MTGUtils
             {
                 log.Error("MTGPrice.com PricePoints formatting has been changed. Need to update the application.");
                 return null;
+            }
+
+            if(CardIn.CardImageURL == null || CardIn.CardImageURL == "")
+            {
+                ParseCardImage(HTMLIn, CardIn);
             }
 
             int start = HTMLIn.IndexOf("var results = [");
@@ -255,18 +281,41 @@ namespace MTGUtils
                     // The "[]" case takes care of empty brackets
                     string[] delim = new string[] { "],[", "[[", "]]", "[]" };
                     string[] splitData = pureData.Split(delim, StringSplitOptions.RemoveEmptyEntries);
-
                     // Data is now formatted as '[DATE,PRICE]'
                     foreach (string point in splitData)
                     {
+                        string[] splitPoint = point.Split(',');
+                        string stringPrice = splitPoint[1];
+
+                        if (stringPrice == "0.0" || stringPrice == "0") // Ignore zero prices.
+                        {
+                            continue;
+                        }
+
+                        if (stringPrice.Contains('.'))
+                        {
+                            if (stringPrice.Length - stringPrice.LastIndexOf('.') == 2) // Adjust "1.X" to "1.X0"
+                                stringPrice += "0";
+                            else if (stringPrice.Length - stringPrice.LastIndexOf('.') > 3) // Adjust "1.XXxxxxxx" to "1.XX"
+                                stringPrice = stringPrice.Substring(0, stringPrice.LastIndexOf('.') + 3);
+                            stringPrice = stringPrice.Replace(".", string.Empty);
+                        }
+                        else
+                        {
+                            stringPrice = stringPrice + "00"; // Adjust "X" to "X00"
+                        }
+
+                        UInt64 Price = Convert.ToUInt64(stringPrice);
+
+                        if(Price == 0)
+                          log.Error(Price + " from '" + stringPrice + "'");
+
                         PricePoint tempPP = new PricePoint();
                         tempPP.Retailer = retailerName;
-
                         // Convert from Milliseconds since Unix Epoch to DateTime
-                        string[] splitPoint = point.Split(',');
                         tempPP.Date = new DateTime(1970, 1, 1, 0, 0, 0, 0);
                         tempPP.Date = tempPP.Date.AddSeconds(Convert.ToDouble(splitPoint[0]) / 1000).ToLocalTime();
-                        tempPP.Price = Convert.ToUInt64(splitPoint[1].Replace(".", ""));
+                        tempPP.Price = Price;
                         retPP.Add(tempPP);
                     }
                 }
@@ -276,5 +325,6 @@ namespace MTGUtils
 
             return retPP;
         }
+
     }
 }
