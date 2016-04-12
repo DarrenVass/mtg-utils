@@ -28,9 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.Label label2;
             this.mainTabs = new System.Windows.Forms.TabPage();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerTopMain = new System.Windows.Forms.SplitContainer();
@@ -57,14 +58,18 @@
             this.pictureBoxCard = new System.Windows.Forms.PictureBox();
             this.lblLowPrice = new System.Windows.Forms.Label();
             this.lblHighPrice = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.windowStatusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.mainTab = new System.Windows.Forms.TabControl();
+            this.lblCurrentPrice = new System.Windows.Forms.Label();
+            this.lblAveragePrice = new System.Windows.Forms.Label();
+            this.lbl3DayAveragePrice = new System.Windows.Forms.Label();
+            this.lbl7DayAveragePrice = new System.Windows.Forms.Label();
+            this.lbl30DayAveragePrice = new System.Windows.Forms.Label();
+            label2 = new System.Windows.Forms.Label();
             this.mainTabs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
@@ -402,17 +407,17 @@
             // 
             // mtgPriceChart
             // 
-            chartArea1.Name = "ChartArea1";
-            this.mtgPriceChart.ChartAreas.Add(chartArea1);
+            chartArea2.Name = "ChartArea1";
+            this.mtgPriceChart.ChartAreas.Add(chartArea2);
             this.mtgPriceChart.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.mtgPriceChart.Legends.Add(legend1);
+            legend2.Name = "Legend1";
+            this.mtgPriceChart.Legends.Add(legend2);
             this.mtgPriceChart.Location = new System.Drawing.Point(0, 0);
             this.mtgPriceChart.Name = "mtgPriceChart";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.mtgPriceChart.Series.Add(series1);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.mtgPriceChart.Series.Add(series2);
             this.mtgPriceChart.Size = new System.Drawing.Size(938, 567);
             this.mtgPriceChart.TabIndex = 0;
             this.mtgPriceChart.Text = "chart1";
@@ -432,10 +437,14 @@
             // 
             // splitContainerCardInfo.Panel2
             // 
+            this.splitContainerCardInfo.Panel2.Controls.Add(this.lbl30DayAveragePrice);
+            this.splitContainerCardInfo.Panel2.Controls.Add(this.lbl7DayAveragePrice);
+            this.splitContainerCardInfo.Panel2.Controls.Add(this.lbl3DayAveragePrice);
+            this.splitContainerCardInfo.Panel2.Controls.Add(this.lblAveragePrice);
+            this.splitContainerCardInfo.Panel2.Controls.Add(this.lblCurrentPrice);
             this.splitContainerCardInfo.Panel2.Controls.Add(this.lblLowPrice);
             this.splitContainerCardInfo.Panel2.Controls.Add(this.lblHighPrice);
-            this.splitContainerCardInfo.Panel2.Controls.Add(this.label3);
-            this.splitContainerCardInfo.Panel2.Controls.Add(this.label2);
+            this.splitContainerCardInfo.Panel2.Controls.Add(label2);
             this.splitContainerCardInfo.Size = new System.Drawing.Size(230, 567);
             this.splitContainerCardInfo.SplitterDistance = 319;
             this.splitContainerCardInfo.TabIndex = 1;
@@ -453,38 +462,35 @@
             // lblLowPrice
             // 
             this.lblLowPrice.AutoSize = true;
-            this.lblLowPrice.Location = new System.Drawing.Point(141, 8);
+            this.lblLowPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLowPrice.Location = new System.Drawing.Point(125, 48);
             this.lblLowPrice.Name = "lblLowPrice";
-            this.lblLowPrice.Size = new System.Drawing.Size(28, 13);
+            this.lblLowPrice.Size = new System.Drawing.Size(40, 20);
             this.lblLowPrice.TabIndex = 3;
             this.lblLowPrice.Text = "0.00";
             // 
             // lblHighPrice
             // 
             this.lblHighPrice.AutoSize = true;
-            this.lblHighPrice.Location = new System.Drawing.Point(50, 8);
+            this.lblHighPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblHighPrice.Location = new System.Drawing.Point(125, 28);
             this.lblHighPrice.Name = "lblHighPrice";
-            this.lblHighPrice.Size = new System.Drawing.Size(28, 13);
+            this.lblHighPrice.Size = new System.Drawing.Size(40, 20);
             this.lblHighPrice.TabIndex = 2;
             this.lblHighPrice.Text = "0.00";
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(107, 8);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(39, 13);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Low: $";
-            // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 8);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 13);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "High: $";
+            label2.AutoSize = true;
+            label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label2.Location = new System.Drawing.Point(11, 8);
+            label2.Name = "label2";
+            label2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            label2.Size = new System.Drawing.Size(120, 140);
+            label2.TabIndex = 0;
+            label2.Text = "Current: $\r\nHigh: $\r\nLow: $\r\nAverage: $\r\n3 Day Avg: $\r\n7 Day Avg: $\r\n30 Day Avg: " +
+    "$";
+            label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // windowStatusStrip
             // 
@@ -547,6 +553,56 @@
             this.mainTab.Size = new System.Drawing.Size(1426, 778);
             this.mainTab.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.mainTab.TabIndex = 0;
+            // 
+            // lblCurrentPrice
+            // 
+            this.lblCurrentPrice.AutoSize = true;
+            this.lblCurrentPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCurrentPrice.Location = new System.Drawing.Point(125, 8);
+            this.lblCurrentPrice.Name = "lblCurrentPrice";
+            this.lblCurrentPrice.Size = new System.Drawing.Size(40, 20);
+            this.lblCurrentPrice.TabIndex = 4;
+            this.lblCurrentPrice.Text = "0.00";
+            // 
+            // lblAveragePrice
+            // 
+            this.lblAveragePrice.AutoSize = true;
+            this.lblAveragePrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAveragePrice.Location = new System.Drawing.Point(125, 68);
+            this.lblAveragePrice.Name = "lblAveragePrice";
+            this.lblAveragePrice.Size = new System.Drawing.Size(40, 20);
+            this.lblAveragePrice.TabIndex = 5;
+            this.lblAveragePrice.Text = "0.00";
+            // 
+            // lbl3DayAveragePrice
+            // 
+            this.lbl3DayAveragePrice.AutoSize = true;
+            this.lbl3DayAveragePrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl3DayAveragePrice.Location = new System.Drawing.Point(125, 88);
+            this.lbl3DayAveragePrice.Name = "lbl3DayAveragePrice";
+            this.lbl3DayAveragePrice.Size = new System.Drawing.Size(40, 20);
+            this.lbl3DayAveragePrice.TabIndex = 6;
+            this.lbl3DayAveragePrice.Text = "0.00";
+            // 
+            // lbl7DayAveragePrice
+            // 
+            this.lbl7DayAveragePrice.AutoSize = true;
+            this.lbl7DayAveragePrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl7DayAveragePrice.Location = new System.Drawing.Point(125, 108);
+            this.lbl7DayAveragePrice.Name = "lbl7DayAveragePrice";
+            this.lbl7DayAveragePrice.Size = new System.Drawing.Size(40, 20);
+            this.lbl7DayAveragePrice.TabIndex = 7;
+            this.lbl7DayAveragePrice.Text = "0.00";
+            // 
+            // lbl30DayAveragePrice
+            // 
+            this.lbl30DayAveragePrice.AutoSize = true;
+            this.lbl30DayAveragePrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl30DayAveragePrice.Location = new System.Drawing.Point(125, 128);
+            this.lbl30DayAveragePrice.Name = "lbl30DayAveragePrice";
+            this.lbl30DayAveragePrice.Size = new System.Drawing.Size(40, 20);
+            this.lbl30DayAveragePrice.TabIndex = 8;
+            this.lbl30DayAveragePrice.Text = "0.00";
             // 
             // MainWindow
             // 
@@ -638,9 +694,12 @@
         private System.Windows.Forms.PictureBox pictureBoxCard;
         private System.Windows.Forms.Label lblLowPrice;
         private System.Windows.Forms.Label lblHighPrice;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataVisualization.Charting.Chart mtgPriceChart;
+        private System.Windows.Forms.Label lbl30DayAveragePrice;
+        private System.Windows.Forms.Label lbl7DayAveragePrice;
+        private System.Windows.Forms.Label lbl3DayAveragePrice;
+        private System.Windows.Forms.Label lblAveragePrice;
+        private System.Windows.Forms.Label lblCurrentPrice;
     }
 }
 

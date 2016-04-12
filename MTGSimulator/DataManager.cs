@@ -145,6 +145,40 @@ namespace MTGUtils
             _ApplicationState.GetAppState(ref CheckedPriceSources, ref CheckedMTGSets, ref DataFilters);
         }
 
+        /* Return the whole/3/7/30 day averages for the given pricepoints. */
+        public void CalculateAverages(List<PricePoint> PPIn, ref UInt64 Avg, ref UInt64 Avg3Day, ref UInt64 Avg7Day, ref UInt64 Avg30Day)
+        {
+            UInt64 AvgCount = 0, Avg3Count = 0, Avg7Count = 0, Avg30Count = 0;
+            foreach (PricePoint pp in PPIn)
+            {
+                Avg += pp.Price;
+                AvgCount++;
+
+                if ((DateTime.Now - pp.Date).TotalDays <= 3)
+                {
+                    Avg3Day += pp.Price;
+                    Avg3Count++;
+                }
+
+                if ((DateTime.Now - pp.Date).TotalDays <= 7)
+                {
+                    Avg7Day += pp.Price;
+                    Avg7Count++;
+                }
+
+                if ((DateTime.Now - pp.Date).TotalDays <= 30)
+                {
+                    Avg30Day += pp.Price;
+                    Avg30Count++;
+                }
+
+            }
+            Avg /= AvgCount;
+            Avg3Day /= Avg3Count;
+            Avg7Day /= Avg7Count;
+            Avg30Day /= Avg30Count;
+        }
+
         /* Simple getters for private member variables */
         public List<MTGSet> GetSets()
         {

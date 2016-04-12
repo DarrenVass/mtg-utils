@@ -212,7 +212,6 @@ namespace MTGUtils
                         cmd.CommandText += ")";
                     }
                     cmd.CommandText += " ORDER BY priceDate DESC";
-                    log.Error("" + cmd.CommandText);
                     SQLiteDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {

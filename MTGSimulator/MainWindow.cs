@@ -285,18 +285,24 @@ namespace MTGUtils
                 }
             }
  
-            UpdateCardInfoWindow(curPP);
+            UpdateCardInfoWindow(curCard, curPP);
         }
 
-        private void UpdateCardInfoWindow(List<PricePoint> PPsIn)
+        private void UpdateCardInfoWindow(MTGCard CardIn, List<PricePoint> PPsIn)
         {
             UInt64 min = 0, max = 0;
             DF.GetMinMax(PPsIn, ref min, ref max);
 
+            lblCurrentPrice.Text = DF.GetPriceFromUInt64(CardIn.Price);
             lblLowPrice.Text = DF.GetPriceFromUInt64(min);
             lblHighPrice.Text = DF.GetPriceFromUInt64(max);
 
-
+            UInt64 Avg = 0, Avg3Day = 0, Avg7Day = 0, Avg30Day = 0;
+            DM.CalculateAverages(PPsIn, ref Avg, ref Avg3Day, ref Avg7Day, ref Avg30Day);
+            lblAveragePrice.Text = DF.GetPriceFromUInt64(Avg);
+            lbl3DayAveragePrice.Text = DF.GetPriceFromUInt64(Avg3Day);
+            lbl7DayAveragePrice.Text = DF.GetPriceFromUInt64(Avg7Day);
+            lbl30DayAveragePrice.Text = DF.GetPriceFromUInt64(Avg30Day);
         }
 
         /*
