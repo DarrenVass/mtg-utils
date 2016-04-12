@@ -443,7 +443,21 @@ namespace MTGUtils
                 UpdateStatusLabel("Status: Error retrieving price points for card " + curCard.ToString());
             }
 
-            pictureBoxCard.Load(curCard.CardImageURL);
+            try
+            {
+                pictureBoxCard.Load(curCard.CardImageURL);
+            }
+            catch (System.Net.WebException ex)
+            {
+                if (ex.Response is System.Net.HttpWebResponse)
+                {
+                    System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)ex.Response;
+                    log.Error("Failed to load image " + curCard.CardImageURL + " with status code " + response.StatusCode + " (" + response.StatusDescription + ")");
+                }
+                
+                pictureBoxCard.Image = global::MTGUtils.Properties.Resources.MTG_Card_Back;
+
+            }
         }
 
         /*
