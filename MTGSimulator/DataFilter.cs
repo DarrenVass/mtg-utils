@@ -56,6 +56,16 @@ namespace MTGUtils
             return DataOut;
         }
 
+        /*
+         * Remove all price points with Price=$0.00
+         */
+        private List<PricePoint> NonZeroFilter(ref List<PricePoint> DataIn)
+        {
+            DataIn.RemoveAll(pp => pp.Price == 0);
+
+            return DataIn;
+        }
+
         private UInt64 CalculateStdDev(List<PricePoint> DataIn, ref UInt64 AvgOut)
         {
             if (DataIn.Count < 2) return 0;

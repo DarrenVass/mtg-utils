@@ -97,37 +97,34 @@ namespace MTGUtils
             return curCards;
         }
 
-        /* Price Point fetching/parsing for a particular card/set */
-        public List<PricePoint> GetPricePointsForCard(MTGCard CardIn)
+        /* Price Point fetching/parsing for a particular card/set and list of retailers*/
+        public List<PricePoint> GetPricePointsForCard(MTGCard CardIn, List<string> RetailerList)
         {
             if (CardIn == null)
             {
                 log.Error("UpdatePricePoints supplied null MTGCard");
                 return null;
             }
-
             CurrentCard = CardIn;
-            List<PricePoint> retPP = new List<PricePoint>();
+
+            // Need to Update PricePoints
             if (CardIn.LastPricePointUpdate.CompareTo(DateTime.Today) < 0)
             {
-                // Need to Update PricePoints
+                List<PricePoint> parsePP = new List<PricePoint>();
                 URLFetcher Fetcher = new URLFetcher(startURL + CardIn.URL);
                 string ret = Fetcher.Fetch();
 
-                retPP = _HTMLParser.ParsePricePoints(ret, CardIn);
+                parsePP = _HTMLParser.ParsePricePoints(ret, CardIn);
 
                 CardIn.LastPricePointUpdate = DateTime.Today;
 
-                _SQLWrapper.UpdatePricePoints(retPP, CardIn);
+                _SQLWrapper.UpdatePricePoints(parsePP, CardIn);
                 _SQLWrapper.UpdateCardLastUpdate(CardIn, CardIn.LastPricePointUpdate);
             }
-            else
-            {
-                // PricePoints are already up to date, parse from SQL
-                retPP = _SQLWrapper.GetPricePoints(CardIn);
-            }
 
-            retPP = retPP.OrderByDescending(pp => pp.Date).ToList();
+            // Select from SQL for given retailers.
+            List<PricePoint> retPP = _SQLWrapper.GetPricePoints(CardIn, RetailerList);
+
             CurrentPricePoints = retPP;
             return retPP;
         }

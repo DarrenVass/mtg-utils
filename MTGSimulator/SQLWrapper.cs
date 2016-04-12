@@ -182,9 +182,15 @@ namespace MTGUtils
             }
         }
 
-        /* Returns a List of the PricePoints from the DB for a given Card */
-        public List<PricePoint> GetPricePoints(MTGCard CardIn)
+        /* Returns a List of the PricePoints from the DB for a given Card for certain retailers retailers.*/
+        public List<PricePoint> GetPricePoints(MTGCard CardIn, List<string> RetailerList)
         {
+            if (CardIn == null)
+            {
+                log.Error("SQLWrapper::GetPricePoints was given a null CardIn.");
+                return null;
+            }
+
             List<PricePoint> retPP = new List<PricePoint>();
             try
             {
@@ -193,6 +199,20 @@ namespace MTGUtils
                     cmd.CommandText = "SELECT * FROM mtgPP WHERE cardName=@CNAME AND setName=@SNAME";
                     cmd.Parameters.AddWithValue("@SNAME", CardIn.SetName);
                     cmd.Parameters.AddWithValue("@CNAME", CardIn.CardName);
+                    // If no retailers it will just select all, otherwise specify retailers.
+                    if (RetailerList.Count > 0)
+                    {
+                        cmd.CommandText += " AND (";
+                        for (int i = 0; i < RetailerList.Count; i++)
+                        {
+                            cmd.CommandText += "retailer = @RNAME" + i.ToString();
+                            if(i < RetailerList.Count() - 1) { cmd.CommandText += " OR "; } // Add OR for all statements except last one.
+                            cmd.Parameters.AddWithValue("@RNAME" + i.ToString(), RetailerList[i]);
+                        }
+                        cmd.CommandText += ")";
+                    }
+                    cmd.CommandText += " ORDER BY priceDate DESC";
+                    log.Error("" + cmd.CommandText);
                     SQLiteDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {

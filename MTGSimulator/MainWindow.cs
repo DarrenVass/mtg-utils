@@ -304,12 +304,6 @@ namespace MTGUtils
          */
         private void PopulateFilterTypes(ref FilterTypes Filter)
         {
-            Filter.RetailerList = new List<string>();
-            foreach(string retailer in mtgPriceSourceCheckListBox.CheckedItems)
-            {
-                Filter.RetailerList.Add(retailer);
-            }
-
             Filter.StdDev = false;
             Filter.Future = false;
             Filter.Average = false;
@@ -422,9 +416,16 @@ namespace MTGUtils
             mtgPriceChart.Titles.Clear();
             mtgPriceChart.Titles.Add(curCard.ToString());
 
+            // Populate the List of Currently selected retailers.
+            List<string> RetailerList = new List<string>();
+            foreach (string retailer in mtgPriceSourceCheckListBox.CheckedItems)
+            {
+                RetailerList.Add(retailer);
+            }
+
             // Fetch the Price Points if required
             UpdateStatusLabel("Status: Fetching info for " + curCard.ToString());
-            List<PricePoint> PricePoints = DM.GetPricePointsForCard(curCard);
+            List<PricePoint> PricePoints = DM.GetPricePointsForCard(curCard, RetailerList);
             UpdateStatusLabel("Status: Complete");
            
             if (PricePoints != null)
