@@ -118,10 +118,10 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataFunctions.cs" />
-    <Compile Include="DataFilter.cs" />
-    <Compile Include="DataManager.cs" />
-    <Compile Include="HTMLParser.cs" />
+    <Compile Include="Data Management\DataFunctions.cs" />
+    <Compile Include="Data Management\DataFilter.cs" />
+    <Compile Include="Data Management\DataManager.cs" />
+    <Compile Include="HTML Parsers\MTGPriceParser.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,8 +158,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="SQLWrapper.cs" />
-    <Compile Include="URLFetcher.cs" />
+    <Compile Include="Data Management\SQLWrapper.cs" />
+    <Compile Include="HTML Parsers\URLFetcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\Debug\Cache\MTG_Card_Back.jpg" />

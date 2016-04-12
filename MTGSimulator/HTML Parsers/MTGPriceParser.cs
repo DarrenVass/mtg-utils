@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using System.IO;
-using System.Xml.XPath;
 
 using log4net;
 
 namespace MTGUtils
 {
-    class HTMLParser
+    class MTGPriceParser
     {
         private readonly ILog log;
 
-        public HTMLParser()
+        public MTGPriceParser()
         {
             log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         }

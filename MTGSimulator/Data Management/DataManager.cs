@@ -1,10 +1,13 @@
-﻿using System;
+﻿/*
+ * This file is specifically for scrapping HTML on mtgprice.com.
+ * It is not always going to be pretty, but since they can change their layout at any moment and this is a personal project
+ *  I'm not going to make it super rigid as I don't have control over their data. 
+ *  I've tried to get API access at http://www.mtgprice.com/mtgPriceAPI.jsp but they've never responded.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Data.SQLite;
-
-using System.IO;
 
 using log4net;
 
@@ -25,7 +28,7 @@ namespace MTGUtils
         private string mainURL = "http://www.mtgprice.com/magic-the-gathering-prices.jsp";
         private string startURL = "http://www.mtgprice.com";
         private SQLWrapper _SQLWrapper;
-        private HTMLParser _HTMLParser;
+        private MTGPriceParser _MTGPriceParser;
         private DataFilter _DataFilter;
 
         // For saving/loading of application state data
@@ -34,7 +37,7 @@ namespace MTGUtils
         public DataManager()
         {
             _SQLWrapper = new SQLWrapper();
-            _HTMLParser = new HTMLParser();
+            _MTGPriceParser = new MTGPriceParser();
             _DataFilter = new DataFilter();
             _ApplicationState = new MTGUtils.AppState();
 
@@ -55,7 +58,7 @@ namespace MTGUtils
             URLFetcher Fetcher = new URLFetcher(mainURL);
             string ret = Fetcher.Fetch();
 
-            Sets = _HTMLParser.ParseSets(ret);
+            Sets = _MTGPriceParser.ParseSets(ret);
 
             _SQLWrapper.UpdateSetList(Sets);
 
@@ -78,7 +81,7 @@ namespace MTGUtils
                 URLFetcher Fetcher = new URLFetcher(startURL + SetIn.URL);
                 string ret = Fetcher.Fetch();
 
-                curCards = _HTMLParser.ParseCardURLs(ret, SetIn.ToString());
+                curCards = _MTGPriceParser.ParseCardURLs(ret, SetIn.ToString());
                 curCards = curCards.OrderBy(card => card.ToString()).ToList();
 
                 SetIn.CardListLastUpdate = DateTime.Today;
@@ -114,7 +117,7 @@ namespace MTGUtils
                 URLFetcher Fetcher = new URLFetcher(startURL + CardIn.URL);
                 string ret = Fetcher.Fetch();
 
-                parsePP = _HTMLParser.ParsePricePoints(ret, CardIn);
+                parsePP = _MTGPriceParser.ParsePricePoints(ret, CardIn);
 
                 CardIn.LastPricePointUpdate = DateTime.Today;
 
@@ -145,40 +148,6 @@ namespace MTGUtils
             _ApplicationState.GetAppState(ref CheckedPriceSources, ref CheckedMTGSets, ref DataFilters);
         }
 
-        /* Return the whole/3/7/30 day averages for the given pricepoints. */
-        public void CalculateAverages(List<PricePoint> PPIn, ref UInt64 Avg, ref UInt64 Avg3Day, ref UInt64 Avg7Day, ref UInt64 Avg30Day)
-        {
-            UInt64 AvgCount = 0, Avg3Count = 0, Avg7Count = 0, Avg30Count = 0;
-            foreach (PricePoint pp in PPIn)
-            {
-                Avg += pp.Price;
-                AvgCount++;
-
-                if ((DateTime.Now - pp.Date).TotalDays <= 3)
-                {
-                    Avg3Day += pp.Price;
-                    Avg3Count++;
-                }
-
-                if ((DateTime.Now - pp.Date).TotalDays <= 7)
-                {
-                    Avg7Day += pp.Price;
-                    Avg7Count++;
-                }
-
-                if ((DateTime.Now - pp.Date).TotalDays <= 30)
-                {
-                    Avg30Day += pp.Price;
-                    Avg30Count++;
-                }
-
-            }
-            Avg /= AvgCount;
-            Avg3Day /= Avg3Count;
-            Avg7Day /= Avg7Count;
-            Avg30Day /= Avg30Count;
-        }
-
         /* Parse all cards for the given list of sets and store properly. */
         public void ParseAllCards(List<MTGSet> SetsIn)
         {
@@ -192,7 +161,7 @@ namespace MTGUtils
                     URLFetcher Fetcher = new URLFetcher(startURL + set.URL);
                     string ret = Fetcher.Fetch();
 
-                    curCards = _HTMLParser.ParseCardURLs(ret, set.ToString());
+                    curCards = _MTGPriceParser.ParseCardURLs(ret, set.ToString());
                     curCards = curCards.OrderBy(card => card.ToString()).ToList();
 
                     set.CardListLastUpdate = DateTime.Today;
