@@ -357,6 +357,7 @@ namespace MTGUtils
             mtgCardsGraphListBox.EndUpdate();
         }
 
+        /* Update the Series on the chart */
         private void ApplyPriceSourcesToChart()
         {
             mtgPriceChart.Series.Clear();
@@ -380,7 +381,63 @@ namespace MTGUtils
             UpdateGraphWithPricePoints();
         }
 
-    /* Simple function for updating the Status bar at the bottom of the window */
+        /* Fetch PricePoints if needed, update chart variables */
+        private void ApplyPricePointsToChart()
+        {
+            if (mtgCardsGraphListBox.SelectedItem == null)
+            {
+                return;
+            }
+
+            MTGCard curCard = (MTGCard)mtgCardsGraphListBox.SelectedItem;
+            if (curCard == null)
+            {
+                return;
+            }
+
+            // Populate the List of Currently selected retailers.
+            List<string> RetailerList = new List<string>();
+            foreach (string retailer in mtgPriceSourceCheckListBox.CheckedItems)
+            {
+                RetailerList.Add(retailer);
+            }
+
+            // Update the Title
+            mtgPriceChart.Titles.Clear();
+            mtgPriceChart.Titles.Add(curCard.ToString());
+
+            // Fetch the Price Points if required
+            UpdateStatusLabel("Status: Fetching info for " + curCard.ToString());
+            List<PricePoint> PricePoints = DM.GetPricePointsForCard(curCard, RetailerList);
+            UpdateStatusLabel("Status: Complete");
+
+            if (PricePoints != null)
+            {
+                UpdateGraphWithPricePoints();
+            }
+            else
+            {
+                UpdateStatusLabel("Status: Error retrieving price points for card " + curCard.ToString());
+            }
+
+            try
+            {
+                pictureBoxCard.Load(curCard.CardImageURL);
+            }
+            catch (System.Net.WebException ex)
+            {
+                if (ex.Response is System.Net.HttpWebResponse)
+                {
+                    System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)ex.Response;
+                    log.Error("Failed to load image " + curCard.CardImageURL + " with status code " + response.StatusCode + " (" + response.StatusDescription + ")");
+                }
+
+                pictureBoxCard.Image = global::MTGUtils.Properties.Resources.MTG_Card_Back;
+
+            }
+        }
+
+        /* Simple function for updating the Status bar at the bottom of the window */
         private void UpdateStatusLabel(string statusIn)
         {
             toolStripStatusLabel.Text = statusIn;
@@ -409,55 +466,10 @@ namespace MTGUtils
             }
         }
 
-        /* When a different card is selected, Fetch PricePoints if needed, update chart variables and splitContainerBottomGraph.panel2 */
+        /* When a different card is selected update the chart. */
         private void mtgCardsGraphListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (mtgCardsGraphListBox.SelectedItem == null)
-            {
-                return;
-            }
-            MTGCard curCard = (MTGCard)mtgCardsGraphListBox.SelectedItem;
-
-            // Update the Title
-            mtgPriceChart.Titles.Clear();
-            mtgPriceChart.Titles.Add(curCard.ToString());
-
-            // Populate the List of Currently selected retailers.
-            List<string> RetailerList = new List<string>();
-            foreach (string retailer in mtgPriceSourceCheckListBox.CheckedItems)
-            {
-                RetailerList.Add(retailer);
-            }
-
-            // Fetch the Price Points if required
-            UpdateStatusLabel("Status: Fetching info for " + curCard.ToString());
-            List<PricePoint> PricePoints = DM.GetPricePointsForCard(curCard, RetailerList);
-            UpdateStatusLabel("Status: Complete");
-           
-            if (PricePoints != null)
-            {
-                UpdateGraphWithPricePoints();
-            }
-            else
-            {
-                UpdateStatusLabel("Status: Error retrieving price points for card " + curCard.ToString());
-            }
-
-            try
-            {
-                pictureBoxCard.Load(curCard.CardImageURL);
-            }
-            catch (System.Net.WebException ex)
-            {
-                if (ex.Response is System.Net.HttpWebResponse)
-                {
-                    System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)ex.Response;
-                    log.Error("Failed to load image " + curCard.CardImageURL + " with status code " + response.StatusCode + " (" + response.StatusDescription + ")");
-                }
-                
-                pictureBoxCard.Image = global::MTGUtils.Properties.Resources.MTG_Card_Back;
-
-            }
+            ApplyPricePointsToChart();
         }
 
         /*
@@ -486,6 +498,7 @@ namespace MTGUtils
             clb.ItemCheck += mtgPriceSourceCheckListBox_ItemCheck;
 
             ApplyPriceSourcesToChart();
+            ApplyPricePointsToChart();
         }
 
         /*
