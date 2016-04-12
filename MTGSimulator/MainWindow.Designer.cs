@@ -28,19 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.Label label2;
+            System.Windows.Forms.GroupBox groupBox3;
+            System.Windows.Forms.GroupBox groupBox1;
+            System.Windows.Forms.GroupBox groupBox2;
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea6 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend6 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series6 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.GroupBox groupBox4;
             this.mainTabs = new System.Windows.Forms.TabPage();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerTopMain = new System.Windows.Forms.SplitContainer();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.dataFiltersCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.splitContainerTopSourcesSetsCheckBoxes = new System.Windows.Forms.SplitContainer();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.mtgPriceSourceCheckListBox = new System.Windows.Forms.CheckedListBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.clearMTGSetsButton = new System.Windows.Forms.Button();
             this.recentMTGSetsButton = new System.Windows.Forms.Button();
             this.modernMTGSetsButton = new System.Windows.Forms.Button();
@@ -56,6 +57,11 @@
             this.mtgPriceChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.splitContainerCardInfo = new System.Windows.Forms.SplitContainer();
             this.pictureBoxCard = new System.Windows.Forms.PictureBox();
+            this.lbl30DayAveragePrice = new System.Windows.Forms.Label();
+            this.lbl7DayAveragePrice = new System.Windows.Forms.Label();
+            this.lbl3DayAveragePrice = new System.Windows.Forms.Label();
+            this.lblAveragePrice = new System.Windows.Forms.Label();
+            this.lblCurrentPrice = new System.Windows.Forms.Label();
             this.lblLowPrice = new System.Windows.Forms.Label();
             this.lblHighPrice = new System.Windows.Forms.Label();
             this.windowStatusStrip = new System.Windows.Forms.StatusStrip();
@@ -64,12 +70,14 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.mainTab = new System.Windows.Forms.TabControl();
-            this.lblCurrentPrice = new System.Windows.Forms.Label();
-            this.lblAveragePrice = new System.Windows.Forms.Label();
-            this.lbl3DayAveragePrice = new System.Windows.Forms.Label();
-            this.lbl7DayAveragePrice = new System.Windows.Forms.Label();
-            this.lbl30DayAveragePrice = new System.Windows.Forms.Label();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.parseAllCardsButton = new System.Windows.Forms.Button();
+            this.parseAllPricePointsButton = new System.Windows.Forms.Button();
             label2 = new System.Windows.Forms.Label();
+            groupBox3 = new System.Windows.Forms.GroupBox();
+            groupBox1 = new System.Windows.Forms.GroupBox();
+            groupBox2 = new System.Windows.Forms.GroupBox();
+            groupBox4 = new System.Windows.Forms.GroupBox();
             this.mainTabs.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
@@ -79,13 +87,13 @@
             this.splitContainerTopMain.Panel1.SuspendLayout();
             this.splitContainerTopMain.Panel2.SuspendLayout();
             this.splitContainerTopMain.SuspendLayout();
-            this.groupBox3.SuspendLayout();
+            groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopSourcesSetsCheckBoxes)).BeginInit();
             this.splitContainerTopSourcesSetsCheckBoxes.Panel1.SuspendLayout();
             this.splitContainerTopSourcesSetsCheckBoxes.Panel2.SuspendLayout();
             this.splitContainerTopSourcesSetsCheckBoxes.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerBottomMain)).BeginInit();
             this.splitContainerBottomMain.Panel1.SuspendLayout();
             this.splitContainerBottomMain.Panel2.SuspendLayout();
@@ -108,7 +116,24 @@
             this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.mainTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            groupBox4.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            label2.Location = new System.Drawing.Point(11, 8);
+            label2.Name = "label2";
+            label2.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            label2.Size = new System.Drawing.Size(120, 140);
+            label2.TabIndex = 0;
+            label2.Text = "Current: $\r\nHigh: $\r\nLow: $\r\nAverage: $\r\n3 Day Avg: $\r\n7 Day Avg: $\r\n30 Day Avg: " +
+    "$";
+            label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // mainTabs
             // 
@@ -154,7 +179,8 @@
             // 
             // splitContainerTopMain.Panel1
             // 
-            this.splitContainerTopMain.Panel1.Controls.Add(this.groupBox3);
+            this.splitContainerTopMain.Panel1.Controls.Add(this.splitContainer1);
+            this.splitContainerTopMain.Panel1.Controls.Add(groupBox3);
             // 
             // splitContainerTopMain.Panel2
             // 
@@ -165,14 +191,14 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.dataFiltersCheckedListBox);
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox3.Location = new System.Drawing.Point(654, 0);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(230, 149);
-            this.groupBox3.TabIndex = 0;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Data Filters";
+            groupBox3.Controls.Add(this.dataFiltersCheckedListBox);
+            groupBox3.Dock = System.Windows.Forms.DockStyle.Right;
+            groupBox3.Location = new System.Drawing.Point(654, 0);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new System.Drawing.Size(230, 149);
+            groupBox3.TabIndex = 0;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Data Filters";
             // 
             // dataFiltersCheckedListBox
             // 
@@ -197,25 +223,25 @@
             // 
             // splitContainerTopSourcesSetsCheckBoxes.Panel1
             // 
-            this.splitContainerTopSourcesSetsCheckBoxes.Panel1.Controls.Add(this.groupBox1);
+            this.splitContainerTopSourcesSetsCheckBoxes.Panel1.Controls.Add(groupBox1);
             // 
             // splitContainerTopSourcesSetsCheckBoxes.Panel2
             // 
-            this.splitContainerTopSourcesSetsCheckBoxes.Panel2.Controls.Add(this.groupBox2);
+            this.splitContainerTopSourcesSetsCheckBoxes.Panel2.Controls.Add(groupBox2);
             this.splitContainerTopSourcesSetsCheckBoxes.Size = new System.Drawing.Size(522, 149);
-            this.splitContainerTopSourcesSetsCheckBoxes.SplitterDistance = 208;
+            this.splitContainerTopSourcesSetsCheckBoxes.SplitterDistance = 193;
             this.splitContainerTopSourcesSetsCheckBoxes.TabIndex = 0;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.mtgPriceSourceCheckListBox);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(208, 149);
-            this.groupBox1.TabIndex = 7;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Price Sources from mtgprice.com";
+            groupBox1.Controls.Add(this.mtgPriceSourceCheckListBox);
+            groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            groupBox1.Location = new System.Drawing.Point(0, 0);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new System.Drawing.Size(193, 149);
+            groupBox1.TabIndex = 7;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Price Sources from mtgprice.com";
             // 
             // mtgPriceSourceCheckListBox
             // 
@@ -242,26 +268,27 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.clearMTGSetsButton);
-            this.groupBox2.Controls.Add(this.recentMTGSetsButton);
-            this.groupBox2.Controls.Add(this.modernMTGSetsButton);
-            this.groupBox2.Controls.Add(this.standardMTGSetsButton);
-            this.groupBox2.Controls.Add(this.mtgSetsCheckedListBox);
-            this.groupBox2.Controls.Add(this.updateSetsButton);
-            this.groupBox2.Controls.Add(this.allMTGSetsButton);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(0, 0);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(310, 149);
-            this.groupBox2.TabIndex = 8;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "MTG Sets";
+            groupBox2.Controls.Add(this.clearMTGSetsButton);
+            groupBox2.Controls.Add(this.recentMTGSetsButton);
+            groupBox2.Controls.Add(this.modernMTGSetsButton);
+            groupBox2.Controls.Add(this.standardMTGSetsButton);
+            groupBox2.Controls.Add(this.mtgSetsCheckedListBox);
+            groupBox2.Controls.Add(this.updateSetsButton);
+            groupBox2.Controls.Add(this.allMTGSetsButton);
+            groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
+            groupBox2.Location = new System.Drawing.Point(0, 0);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new System.Drawing.Size(325, 149);
+            groupBox2.TabIndex = 8;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "MTG Sets";
             // 
             // clearMTGSetsButton
             // 
+            this.clearMTGSetsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.clearMTGSetsButton.Location = new System.Drawing.Point(6, 77);
             this.clearMTGSetsButton.Name = "clearMTGSetsButton";
-            this.clearMTGSetsButton.Size = new System.Drawing.Size(58, 23);
+            this.clearMTGSetsButton.Size = new System.Drawing.Size(72, 23);
             this.clearMTGSetsButton.TabIndex = 9;
             this.clearMTGSetsButton.Text = "Clear";
             this.clearMTGSetsButton.UseVisualStyleBackColor = true;
@@ -269,9 +296,10 @@
             // 
             // recentMTGSetsButton
             // 
-            this.recentMTGSetsButton.Location = new System.Drawing.Point(70, 48);
+            this.recentMTGSetsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.recentMTGSetsButton.Location = new System.Drawing.Point(82, 48);
             this.recentMTGSetsButton.Name = "recentMTGSetsButton";
-            this.recentMTGSetsButton.Size = new System.Drawing.Size(58, 23);
+            this.recentMTGSetsButton.Size = new System.Drawing.Size(72, 23);
             this.recentMTGSetsButton.TabIndex = 8;
             this.recentMTGSetsButton.Text = "Recent";
             this.recentMTGSetsButton.UseVisualStyleBackColor = true;
@@ -279,9 +307,10 @@
             // 
             // modernMTGSetsButton
             // 
+            this.modernMTGSetsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.modernMTGSetsButton.Location = new System.Drawing.Point(6, 48);
             this.modernMTGSetsButton.Name = "modernMTGSetsButton";
-            this.modernMTGSetsButton.Size = new System.Drawing.Size(58, 23);
+            this.modernMTGSetsButton.Size = new System.Drawing.Size(72, 23);
             this.modernMTGSetsButton.TabIndex = 7;
             this.modernMTGSetsButton.Text = "Modern";
             this.modernMTGSetsButton.UseVisualStyleBackColor = true;
@@ -289,9 +318,10 @@
             // 
             // standardMTGSetsButton
             // 
-            this.standardMTGSetsButton.Location = new System.Drawing.Point(70, 19);
+            this.standardMTGSetsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.standardMTGSetsButton.Location = new System.Drawing.Point(82, 19);
             this.standardMTGSetsButton.Name = "standardMTGSetsButton";
-            this.standardMTGSetsButton.Size = new System.Drawing.Size(58, 23);
+            this.standardMTGSetsButton.Size = new System.Drawing.Size(72, 23);
             this.standardMTGSetsButton.TabIndex = 6;
             this.standardMTGSetsButton.Text = "Standard";
             this.standardMTGSetsButton.UseVisualStyleBackColor = true;
@@ -300,17 +330,18 @@
             // mtgSetsCheckedListBox
             // 
             this.mtgSetsCheckedListBox.CheckOnClick = true;
-            this.mtgSetsCheckedListBox.Location = new System.Drawing.Point(134, 16);
+            this.mtgSetsCheckedListBox.Location = new System.Drawing.Point(160, 15);
             this.mtgSetsCheckedListBox.Name = "mtgSetsCheckedListBox";
-            this.mtgSetsCheckedListBox.Size = new System.Drawing.Size(169, 124);
+            this.mtgSetsCheckedListBox.Size = new System.Drawing.Size(159, 124);
             this.mtgSetsCheckedListBox.TabIndex = 2;
             this.mtgSetsCheckedListBox.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.mtgSetsCheckedListBox_ItemCheck);
             // 
             // updateSetsButton
             // 
+            this.updateSetsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.updateSetsButton.Location = new System.Drawing.Point(6, 105);
             this.updateSetsButton.Name = "updateSetsButton";
-            this.updateSetsButton.Size = new System.Drawing.Size(122, 34);
+            this.updateSetsButton.Size = new System.Drawing.Size(148, 34);
             this.updateSetsButton.TabIndex = 4;
             this.updateSetsButton.Text = "Update Set URLs";
             this.updateSetsButton.UseVisualStyleBackColor = true;
@@ -318,9 +349,10 @@
             // 
             // allMTGSetsButton
             // 
+            this.allMTGSetsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.allMTGSetsButton.Location = new System.Drawing.Point(6, 19);
             this.allMTGSetsButton.Name = "allMTGSetsButton";
-            this.allMTGSetsButton.Size = new System.Drawing.Size(58, 23);
+            this.allMTGSetsButton.Size = new System.Drawing.Size(72, 23);
             this.allMTGSetsButton.TabIndex = 5;
             this.allMTGSetsButton.Text = "All";
             this.allMTGSetsButton.UseVisualStyleBackColor = true;
@@ -407,17 +439,17 @@
             // 
             // mtgPriceChart
             // 
-            chartArea2.Name = "ChartArea1";
-            this.mtgPriceChart.ChartAreas.Add(chartArea2);
+            chartArea6.Name = "ChartArea1";
+            this.mtgPriceChart.ChartAreas.Add(chartArea6);
             this.mtgPriceChart.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend2.Name = "Legend1";
-            this.mtgPriceChart.Legends.Add(legend2);
+            legend6.Name = "Legend1";
+            this.mtgPriceChart.Legends.Add(legend6);
             this.mtgPriceChart.Location = new System.Drawing.Point(0, 0);
             this.mtgPriceChart.Name = "mtgPriceChart";
-            series2.ChartArea = "ChartArea1";
-            series2.Legend = "Legend1";
-            series2.Name = "Series1";
-            this.mtgPriceChart.Series.Add(series2);
+            series6.ChartArea = "ChartArea1";
+            series6.Legend = "Legend1";
+            series6.Name = "Series1";
+            this.mtgPriceChart.Series.Add(series6);
             this.mtgPriceChart.Size = new System.Drawing.Size(938, 567);
             this.mtgPriceChart.TabIndex = 0;
             this.mtgPriceChart.Text = "chart1";
@@ -459,6 +491,56 @@
             this.pictureBoxCard.TabIndex = 1;
             this.pictureBoxCard.TabStop = false;
             // 
+            // lbl30DayAveragePrice
+            // 
+            this.lbl30DayAveragePrice.AutoSize = true;
+            this.lbl30DayAveragePrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl30DayAveragePrice.Location = new System.Drawing.Point(125, 128);
+            this.lbl30DayAveragePrice.Name = "lbl30DayAveragePrice";
+            this.lbl30DayAveragePrice.Size = new System.Drawing.Size(40, 20);
+            this.lbl30DayAveragePrice.TabIndex = 8;
+            this.lbl30DayAveragePrice.Text = "0.00";
+            // 
+            // lbl7DayAveragePrice
+            // 
+            this.lbl7DayAveragePrice.AutoSize = true;
+            this.lbl7DayAveragePrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl7DayAveragePrice.Location = new System.Drawing.Point(125, 108);
+            this.lbl7DayAveragePrice.Name = "lbl7DayAveragePrice";
+            this.lbl7DayAveragePrice.Size = new System.Drawing.Size(40, 20);
+            this.lbl7DayAveragePrice.TabIndex = 7;
+            this.lbl7DayAveragePrice.Text = "0.00";
+            // 
+            // lbl3DayAveragePrice
+            // 
+            this.lbl3DayAveragePrice.AutoSize = true;
+            this.lbl3DayAveragePrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl3DayAveragePrice.Location = new System.Drawing.Point(125, 88);
+            this.lbl3DayAveragePrice.Name = "lbl3DayAveragePrice";
+            this.lbl3DayAveragePrice.Size = new System.Drawing.Size(40, 20);
+            this.lbl3DayAveragePrice.TabIndex = 6;
+            this.lbl3DayAveragePrice.Text = "0.00";
+            // 
+            // lblAveragePrice
+            // 
+            this.lblAveragePrice.AutoSize = true;
+            this.lblAveragePrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAveragePrice.Location = new System.Drawing.Point(125, 68);
+            this.lblAveragePrice.Name = "lblAveragePrice";
+            this.lblAveragePrice.Size = new System.Drawing.Size(40, 20);
+            this.lblAveragePrice.TabIndex = 5;
+            this.lblAveragePrice.Text = "0.00";
+            // 
+            // lblCurrentPrice
+            // 
+            this.lblCurrentPrice.AutoSize = true;
+            this.lblCurrentPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCurrentPrice.Location = new System.Drawing.Point(125, 8);
+            this.lblCurrentPrice.Name = "lblCurrentPrice";
+            this.lblCurrentPrice.Size = new System.Drawing.Size(40, 20);
+            this.lblCurrentPrice.TabIndex = 4;
+            this.lblCurrentPrice.Text = "0.00";
+            // 
             // lblLowPrice
             // 
             this.lblLowPrice.AutoSize = true;
@@ -478,19 +560,6 @@
             this.lblHighPrice.Size = new System.Drawing.Size(40, 20);
             this.lblHighPrice.TabIndex = 2;
             this.lblHighPrice.Text = "0.00";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            label2.Location = new System.Drawing.Point(11, 8);
-            label2.Name = "label2";
-            label2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            label2.Size = new System.Drawing.Size(120, 140);
-            label2.TabIndex = 0;
-            label2.Text = "Current: $\r\nHigh: $\r\nLow: $\r\nAverage: $\r\n3 Day Avg: $\r\n7 Day Avg: $\r\n30 Day Avg: " +
-    "$";
-            label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // windowStatusStrip
             // 
@@ -554,55 +623,54 @@
             this.mainTab.SizeMode = System.Windows.Forms.TabSizeMode.FillToRight;
             this.mainTab.TabIndex = 0;
             // 
-            // lblCurrentPrice
+            // splitContainer1
             // 
-            this.lblCurrentPrice.AutoSize = true;
-            this.lblCurrentPrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCurrentPrice.Location = new System.Drawing.Point(125, 8);
-            this.lblCurrentPrice.Name = "lblCurrentPrice";
-            this.lblCurrentPrice.Size = new System.Drawing.Size(40, 20);
-            this.lblCurrentPrice.TabIndex = 4;
-            this.lblCurrentPrice.Text = "0.00";
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
             // 
-            // lblAveragePrice
+            // splitContainer1.Panel1
             // 
-            this.lblAveragePrice.AutoSize = true;
-            this.lblAveragePrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAveragePrice.Location = new System.Drawing.Point(125, 68);
-            this.lblAveragePrice.Name = "lblAveragePrice";
-            this.lblAveragePrice.Size = new System.Drawing.Size(40, 20);
-            this.lblAveragePrice.TabIndex = 5;
-            this.lblAveragePrice.Text = "0.00";
+            this.splitContainer1.Panel1.Controls.Add(groupBox4);
+            this.splitContainer1.Size = new System.Drawing.Size(654, 149);
+            this.splitContainer1.SplitterDistance = 125;
+            this.splitContainer1.TabIndex = 1;
             // 
-            // lbl3DayAveragePrice
+            // groupBox4
             // 
-            this.lbl3DayAveragePrice.AutoSize = true;
-            this.lbl3DayAveragePrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl3DayAveragePrice.Location = new System.Drawing.Point(125, 88);
-            this.lbl3DayAveragePrice.Name = "lbl3DayAveragePrice";
-            this.lbl3DayAveragePrice.Size = new System.Drawing.Size(40, 20);
-            this.lbl3DayAveragePrice.TabIndex = 6;
-            this.lbl3DayAveragePrice.Text = "0.00";
+            groupBox4.AutoSize = true;
+            groupBox4.Controls.Add(this.parseAllPricePointsButton);
+            groupBox4.Controls.Add(this.parseAllCardsButton);
+            groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
+            groupBox4.Location = new System.Drawing.Point(0, 0);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new System.Drawing.Size(125, 149);
+            groupBox4.TabIndex = 0;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Auto Parsing";
             // 
-            // lbl7DayAveragePrice
+            // parseAllCardsButton
             // 
-            this.lbl7DayAveragePrice.AutoSize = true;
-            this.lbl7DayAveragePrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl7DayAveragePrice.Location = new System.Drawing.Point(125, 108);
-            this.lbl7DayAveragePrice.Name = "lbl7DayAveragePrice";
-            this.lbl7DayAveragePrice.Size = new System.Drawing.Size(40, 20);
-            this.lbl7DayAveragePrice.TabIndex = 7;
-            this.lbl7DayAveragePrice.Text = "0.00";
+            this.parseAllCardsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.parseAllCardsButton.Location = new System.Drawing.Point(6, 19);
+            this.parseAllCardsButton.Name = "parseAllCardsButton";
+            this.parseAllCardsButton.Size = new System.Drawing.Size(114, 58);
+            this.parseAllCardsButton.TabIndex = 0;
+            this.parseAllCardsButton.Text = "Parse all cards for currently selected sets";
+            this.parseAllCardsButton.UseVisualStyleBackColor = true;
+            this.parseAllCardsButton.Click += new System.EventHandler(this.parseAllCardsButton_Click);
             // 
-            // lbl30DayAveragePrice
+            // parseAllPricePointsButton
             // 
-            this.lbl30DayAveragePrice.AutoSize = true;
-            this.lbl30DayAveragePrice.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl30DayAveragePrice.Location = new System.Drawing.Point(125, 128);
-            this.lbl30DayAveragePrice.Name = "lbl30DayAveragePrice";
-            this.lbl30DayAveragePrice.Size = new System.Drawing.Size(40, 20);
-            this.lbl30DayAveragePrice.TabIndex = 8;
-            this.lbl30DayAveragePrice.Text = "0.00";
+            this.parseAllPricePointsButton.Enabled = false;
+            this.parseAllPricePointsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.parseAllPricePointsButton.Location = new System.Drawing.Point(6, 83);
+            this.parseAllPricePointsButton.Name = "parseAllPricePointsButton";
+            this.parseAllPricePointsButton.Size = new System.Drawing.Size(114, 60);
+            this.parseAllPricePointsButton.TabIndex = 1;
+            this.parseAllPricePointsButton.Text = "Parse all price points for current set";
+            this.parseAllPricePointsButton.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 
@@ -625,13 +693,13 @@
             this.splitContainerTopMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopMain)).EndInit();
             this.splitContainerTopMain.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
+            groupBox3.ResumeLayout(false);
             this.splitContainerTopSourcesSetsCheckBoxes.Panel1.ResumeLayout(false);
             this.splitContainerTopSourcesSetsCheckBoxes.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopSourcesSetsCheckBoxes)).EndInit();
             this.splitContainerTopSourcesSetsCheckBoxes.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
             this.splitContainerBottomMain.Panel1.ResumeLayout(false);
             this.splitContainerBottomMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerBottomMain)).EndInit();
@@ -657,6 +725,11 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.mainTab.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -669,9 +742,7 @@
         private System.Windows.Forms.SplitContainer splitContainerMain;
         private System.Windows.Forms.SplitContainer splitContainerTopMain;
         private System.Windows.Forms.SplitContainer splitContainerTopSourcesSetsCheckBoxes;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckedListBox mtgPriceSourceCheckListBox;
-        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button clearMTGSetsButton;
         private System.Windows.Forms.Button recentMTGSetsButton;
         private System.Windows.Forms.Button modernMTGSetsButton;
@@ -688,7 +759,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TabControl mainTab;
         private System.Windows.Forms.SplitContainer splitContainerBottomGraph;
-        private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckedListBox dataFiltersCheckedListBox;
         private System.Windows.Forms.SplitContainer splitContainerCardInfo;
         private System.Windows.Forms.PictureBox pictureBoxCard;
@@ -700,6 +770,9 @@
         private System.Windows.Forms.Label lbl3DayAveragePrice;
         private System.Windows.Forms.Label lblAveragePrice;
         private System.Windows.Forms.Label lblCurrentPrice;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.Button parseAllPricePointsButton;
+        private System.Windows.Forms.Button parseAllCardsButton;
     }
 }
 

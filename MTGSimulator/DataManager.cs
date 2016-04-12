@@ -179,6 +179,30 @@ namespace MTGUtils
             Avg30Day /= Avg30Count;
         }
 
+        /* Parse all cards for the given list of sets and store properly. */
+        public void ParseAllCards(List<MTGSet> SetsIn)
+        {
+            foreach(MTGSet set in SetsIn)
+            {
+                if (set.CardListLastUpdate.CompareTo(DateTime.Today) < 0)
+                {
+                    List<MTGCard> curCards = new List<MTGCard>();
+
+                    // Need to Update List
+                    URLFetcher Fetcher = new URLFetcher(startURL + set.URL);
+                    string ret = Fetcher.Fetch();
+
+                    curCards = _HTMLParser.ParseCardURLs(ret, set.ToString());
+                    curCards = curCards.OrderBy(card => card.ToString()).ToList();
+
+                    set.CardListLastUpdate = DateTime.Today;
+
+                    _SQLWrapper.UpdateCardList(curCards, set.ToString());
+                    _SQLWrapper.UpdateSetLastUpdate(set.ToString(), set.CardListLastUpdate);
+                }
+            }           
+        }
+
         /* Simple getters for private member variables */
         public List<MTGSet> GetSets()
         {

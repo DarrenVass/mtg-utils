@@ -515,6 +515,18 @@ namespace MTGUtils
             UpdateGraphWithPricePoints();
         }
 
-        
+        /* Grab all selected sets and pass it to DataManager.ParseAllCards() */
+        private void parseAllCardsButton_Click(object sender, EventArgs e)
+        {
+            if (mtgSetsGraphListBox.Items.Count == 0) { return; }
+            List<MTGSet> setsToPass = new List<MTGSet>();
+            foreach (MTGSet set in mtgSetsGraphListBox.Items)
+            {
+                setsToPass.Add(set);
+            }
+            UpdateStatusLabel("Status: Fetching info for selected sets");
+            DM.ParseAllCards(setsToPass);
+            UpdateStatusLabel("Status: Complete");
+        }
     }
 }
