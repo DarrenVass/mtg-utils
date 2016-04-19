@@ -21,6 +21,7 @@ namespace MTGUtils
         private List<MTGSet> Sets;      // Information for ALL sets
         private MTGCard CurrentCard;
         private List<PricePoint> CurrentPricePoints;
+        private MTGFormat CurrentFormat;
 
         private DateTime LastSetsUpdate { get; set; }
 
@@ -29,6 +30,7 @@ namespace MTGUtils
         private string startURL = "http://www.mtgprice.com";
         private SQLWrapper _SQLWrapper;
         private MTGPriceParser _MTGPriceParser;
+        private FormatParser _FormatParser;
         private DataFilter _DataFilter;
 
         // For saving/loading of application state data
@@ -38,6 +40,7 @@ namespace MTGUtils
         {
             _SQLWrapper = new SQLWrapper();
             _MTGPriceParser = new MTGPriceParser();
+            _FormatParser = new FormatParser();
             _DataFilter = new DataFilter();
             _ApplicationState = new MTGUtils.AppState();
 
@@ -45,6 +48,7 @@ namespace MTGUtils
             Sets = _SQLWrapper.GetSetList();
             CurrentCard = null;
             CurrentPricePoints = null;
+            CurrentFormat = null;
         }
 
         public void Dispose()
@@ -132,26 +136,10 @@ namespace MTGUtils
             return retPP;
         }
 
-        public List<PricePoint> ApplyFilters(List<PricePoint> PPIn, FilterTypes FilterTypeIn)
-        {
-             return _DataFilter.ApplyDataFilters(PPIn, FilterTypeIn);
-        }
-
-        /* Updating the application state to be stored */
-        public void UpdateAppState(List<int> CheckedPriceSources, List<int> CheckedMTGSets, List<int> DataFilters)
-        {
-            _ApplicationState.UpdateAppState(CheckedPriceSources, CheckedMTGSets, DataFilters);
-        }
-
-        public void GetAppState(ref List<int> CheckedPriceSources, ref List<int> CheckedMTGSets, ref List<int> DataFilters)
-        {
-            _ApplicationState.GetAppState(ref CheckedPriceSources, ref CheckedMTGSets, ref DataFilters);
-        }
-
         /* Parse all cards for the given list of sets and store properly. */
         public void ParseAllCards(List<MTGSet> SetsIn)
         {
-            foreach(MTGSet set in SetsIn)
+            foreach (MTGSet set in SetsIn)
             {
                 if (set.CardListLastUpdate.CompareTo(DateTime.Today) < 0)
                 {
@@ -169,7 +157,84 @@ namespace MTGUtils
                     _SQLWrapper.UpdateCardList(curCards, set.ToString());
                     _SQLWrapper.UpdateSetLastUpdate(set.ToString(), set.CardListLastUpdate);
                 }
+            }
+        }
+
+        /* From a list of set name strings get the matching MTGSets. */
+        private List<MTGSet> ConvertStringsToSets(List<string> StringsIn)
+        {
+            log.Error("ConvertStringsToSets");
+            if (StringsIn == null) { return null; }
+
+            List<MTGSet> ret = new List<MTGSet>();
+
+            foreach(string setName in StringsIn)
+            {
+                try
+                {
+                    MTGSet z = Sets.Single(p => p.SetName.Equals(setName, StringComparison.OrdinalIgnoreCase));
+                    ret.Add(z);
+                }
+                catch(System.InvalidOperationException)
+                {
+                    log.Error("ConvertStringsToSets() failed for set name '" + setName + "'");
+                }
             }           
+
+            return ret;
+        }
+        
+        /* Get Stanard format. May need to parse from HTML or just from the appstate. */
+        public List<MTGSet> RetrieveStandardFormat()
+        {
+            _ApplicationState.GetStandardFormat(ref CurrentFormat);
+
+            if (CurrentFormat == null || CurrentFormat.FormatListLastUpdate.CompareTo(DateTime.Today) < 0)
+            {
+                // Need to update the format.
+                URLFetcher Fetcher = new URLFetcher(_FormatParser.StandardURL);
+                string ret = Fetcher.Fetch();
+                CurrentFormat = _FormatParser.ParseFormat(ret, _FormatParser.StandardFormatName);
+                if (CurrentFormat == null) { return null; }
+            }
+
+            _ApplicationState.UpdateStandardFormat(CurrentFormat);
+            return ConvertStringsToSets(CurrentFormat.Sets);
+        }
+
+        /* Get Modern format. May need to parse from HTML or just from the appstate. */
+        public List<MTGSet> RetrieveModernFormat()
+        {
+            _ApplicationState.GetModernFormat(ref CurrentFormat);
+
+            if (CurrentFormat == null || CurrentFormat.FormatListLastUpdate.CompareTo(DateTime.Today) < 0)
+            {
+                // Need to update the format.
+                URLFetcher Fetcher = new URLFetcher(_FormatParser.ModernURL);
+                string ret = Fetcher.Fetch();
+                CurrentFormat = _FormatParser.ParseFormat(ret, _FormatParser.ModernFormatName);
+                if (CurrentFormat == null) { return null; }
+            }
+
+            _ApplicationState.UpdateModernFormat(CurrentFormat);
+            return ConvertStringsToSets(CurrentFormat.Sets);
+        }
+
+        /* Updating the application state to be stored */
+        public void UpdateAppState(List<int> CheckedPriceSources, List<int> CheckedMTGSets, List<int> DataFilters)
+        {
+            _ApplicationState.UpdateAppState(CheckedPriceSources, CheckedMTGSets, DataFilters);
+        }
+
+        public void GetAppState(ref List<int> CheckedPriceSources, ref List<int> CheckedMTGSets, ref List<int> DataFilters)
+        {
+            _ApplicationState.GetAppState(ref CheckedPriceSources, ref CheckedMTGSets, ref DataFilters);
+        }
+
+        /* Applying Data Filters */
+        public List<PricePoint> ApplyFilters(List<PricePoint> PPIn, FilterTypes FilterTypeIn)
+        {
+            return _DataFilter.ApplyDataFilters(PPIn, FilterTypeIn);
         }
 
         /* Simple getters for private member variables */

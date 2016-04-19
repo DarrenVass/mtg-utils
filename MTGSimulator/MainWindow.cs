@@ -159,6 +159,31 @@ namespace MTGUtils
             clearMTGSetsButton.Enabled = sets.Count > 0;
         }
 
+        private void updateMTGSets(List<MTGSet> SetsIn)
+        {
+            UnselectAllMTGSetsCheckedListBox();
+            if (SetsIn == null)
+            {
+                UpdateStatusLabel("Status: No sets returned");
+                return;
+            }
+
+            try
+            {
+                foreach (MTGSet set in SetsIn)
+                {
+                    mtgSetsCheckedListBox.SetItemChecked(mtgSetsCheckedListBox.FindString(set.ToString()), true);
+                }
+
+                UpdateStatusLabel("Status: Complete");
+            }
+            catch (ArgumentOutOfRangeException err)
+            {
+                log.Warn("updateMTGSets() Error: ", err);
+                UpdateStatusLabel("Status: Error in updating sets");
+            }
+        }
+
         private void fromDateMTGSetsButtonHelper(DateTime fromDate)
         {
             List<MTGSet> currentSets = new List<MTGSet>();
@@ -170,22 +195,19 @@ namespace MTGUtils
                 }
             }
 
-            UnselectAllMTGSetsCheckedListBox();
+            updateMTGSets(currentSets);
+        }
 
-            try
-            {
-                foreach (MTGSet set in currentSets)
-                {
-                    mtgSetsCheckedListBox.SetItemChecked(mtgSetsCheckedListBox.FindString(set.ToString()), true);
-                }
+        private void standardMTGSetsButton_Click(object sender, EventArgs e)
+        {
+            UpdateStatusLabel("Status: Fetch standard sets");
+            updateMTGSets(DM.RetrieveStandardFormat());
+        }
 
-                UpdateStatusLabel("Certain Sets: Complete");
-            }
-            catch (ArgumentOutOfRangeException err)
-            {
-                log.Warn("fromDateMTGSetsButtonHelper Error:", err);
-                UpdateStatusLabel("Certain Sets: Error");
-            }
+        private void modernMTGSetsButton_Click(object sender, EventArgs e)
+        {
+            UpdateStatusLabel("Status: Fetch modern sets");
+            updateMTGSets(DM.RetrieveModernFormat());
         }
 
         private void allMTGSetsButton_Click(object sender, EventArgs e)
@@ -198,31 +220,6 @@ namespace MTGUtils
                 mtgSetsCheckedListBox.SetItemChecked(i, true);
             }
             UpdateStatusLabel("All: Complete");
-        }
-
-        private void standardMTGSetsButton_Click(object sender, EventArgs e)
-        {
-            /* Sets within 2 years as a guesstimate. */
-            DateTime twoYearsAgo = DateTime.Now.AddYears(-2);
- 
-            fromDateMTGSetsButtonHelper(twoYearsAgo);
-        }
-
-        private void modernMTGSetsButton_Click(object sender, EventArgs e)
-        {
-            /* Sets since 8th edition */
-            List<MTGSet> sets = DM.GetSets();
-            DateTime eighthDate = DateTime.Today;
-            foreach(MTGSet set in sets)
-            {
-                if(set.ToString().CompareTo("8th Edition") == 0)
-                {
-                    eighthDate = set.SetDate;
-                    break;
-                }
-            }
-            
-            fromDateMTGSetsButtonHelper(eighthDate);
         }
 
         private void recentMTGSetsButton_Click(object sender, EventArgs e)

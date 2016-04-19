@@ -121,6 +121,7 @@
     <Compile Include="Data Management\DataFunctions.cs" />
     <Compile Include="Data Management\DataFilter.cs" />
     <Compile Include="Data Management\DataManager.cs" />
+    <Compile Include="HTML Parsers\FormatParser.cs" />
     <Compile Include="HTML Parsers\MTGPriceParser.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
@@ -135,6 +136,7 @@
     </Compile>
     <Compile Include="Structs\AppState.cs" />
     <Compile Include="Structs\MTGCard.cs" />
+    <Compile Include="Structs\MTGFormat.cs" />
     <Compile Include="Structs\MTGSet.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -21,6 +21,8 @@ namespace MTGUtils
         public List<int> PriceSourceState;    // List reflecting which source indices are checked
         public List<int> MTGSetsState;        // List reflecting which MTG set indicies are checked
         public List<int> DataFilterState;     // List reflecting which data filters are to be applied
+        public MTGFormat StandardFormat;      // The current standard format
+        public MTGFormat ModernFormat;        // The current modern format
     }
 
     public class AppState:IDisposable
@@ -55,6 +57,26 @@ namespace MTGUtils
             CheckedPriceSources = AppData.PriceSourceState;
             CheckedMTGSets = AppData.MTGSetsState;
             DataFilters = AppData.DataFilterState;
+        }
+
+        public void UpdateStandardFormat(MTGFormat Format)
+        {
+            AppData.StandardFormat = Format;
+        }
+
+        public void GetStandardFormat(ref MTGFormat Format)
+        {
+            Format = AppData.StandardFormat;
+        }
+
+        public void UpdateModernFormat(MTGFormat Format)
+        {
+            AppData.ModernFormat = Format;
+        }
+
+        public void GetModernFormat(ref MTGFormat Format)
+        {
+            Format = AppData.ModernFormat;
         }
 
         /* Get File state from the file */
