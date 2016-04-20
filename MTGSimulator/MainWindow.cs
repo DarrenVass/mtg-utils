@@ -401,7 +401,8 @@ namespace MTGUtils
 
             // Update the Title
             mtgPriceChart.Titles.Clear();
-            mtgPriceChart.Titles.Add(curCard.ToString());
+            Title title = mtgPriceChart.Titles.Add(curCard.ToString());
+            title.Font = new Font("Arial", 32);
 
             // Fetch the Price Points if required
             UpdateStatusLabel("Status: Fetching info for " + curCard.ToString());
@@ -432,6 +433,31 @@ namespace MTGUtils
                 pictureBoxCard.Image = global::MTGUtils.Properties.Resources.MTG_Card_Back;
 
             }
+
+            /* TODO: Add a toggle for this as it can be cluttered with older sets.
+            // Add the set release date markets to the chart
+            mtgPriceChart.ChartAreas["StripLines"].AxisX.StripLines.Clear();
+            foreach(MTGSet set in DM.GetSets())
+            {
+                if(set.SetDate.CompareTo(PricePoints.First().Date) < 0 &&  set.SetDate.CompareTo(PricePoints.Last().Date) > 0)
+                {
+                    StripLine stripLine = new StripLine();
+                    // stripLine.Text = set.SetName;
+                    stripLine.BackColor = Color.Magenta;
+                    stripLine.StripWidth = 0.1;
+                    stripLine.StripWidthType = DateTimeIntervalType.Days;
+
+                    TimeSpan ts = set.SetDate - PricePoints.Last().Date;
+
+                    stripLine.Interval = 100000; // Tried setting to 0 to be shown once, but then I see nothing.
+                    stripLine.IntervalOffset = ts.Days;
+                    stripLine.IntervalOffsetType = DateTimeIntervalType.Days;
+
+                    mtgPriceChart.ChartAreas["StripLines"].AxisX.StripLines.Add(stripLine);
+                }
+            }
+            */
+
         }
 
         /* Simple function for updating the Status bar at the bottom of the window */
