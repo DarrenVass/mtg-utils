@@ -139,6 +139,11 @@ namespace MTGUtils
         /* Parse all cards for the given list of sets and store properly. */
         public void ParseAllCards(List<MTGSet> SetsIn)
         {
+            if (SetsIn == null || SetsIn.Count == 0)
+            {
+                log.Error("ParseAllCards() SetsIn was empty.");
+                return;
+            }
             foreach (MTGSet set in SetsIn)
             {
                 if (set.CardListLastUpdate.CompareTo(DateTime.Today) < 0)
@@ -157,6 +162,40 @@ namespace MTGUtils
                     _SQLWrapper.UpdateCardList(curCards, set.ToString());
                     _SQLWrapper.UpdateSetLastUpdate(set.ToString(), set.CardListLastUpdate);
                 }
+            }
+        }
+
+        /* Parse all price points for the given set and store properly. Ignore any cards that are up to date or under the given price.*/
+        public void ParseAllPricePoints(MTGSet SetIn, UInt64 PriceIn)
+        {
+            
+            if (SetIn == null)
+            {
+                log.Error("ParseAllPricePoints() SetIn was null.");
+                return;
+            }
+            if (SetIn.Cards == null || SetIn.Cards.Count == 0)
+            {
+                log.Error("ParseAllPricePoints() SetIn had no cards.");
+                return;
+            }
+
+            foreach(MTGCard card in SetIn.Cards)
+            {
+                if ((card.LastPricePointUpdate.CompareTo(DateTime.Today) > 0) || 
+                        (card.Price < PriceIn))
+                { continue; }
+
+                List<PricePoint> parsePP = new List<PricePoint>();
+                URLFetcher Fetcher = new URLFetcher(startURL + card.URL);
+                string ret = Fetcher.Fetch();
+
+                parsePP = _MTGPriceParser.ParsePricePoints(ret, card);
+
+                card.LastPricePointUpdate = DateTime.Today;
+
+                _SQLWrapper.UpdatePricePoints(parsePP, card);
+                _SQLWrapper.UpdateCardLastUpdate(card, card.LastPricePointUpdate);
             }
         }
 

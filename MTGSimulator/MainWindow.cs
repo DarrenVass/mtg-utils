@@ -477,6 +477,7 @@ namespace MTGUtils
             MTGSet curSet = (MTGSet)mtgSetsGraphListBox.SelectedItem;
             UpdateStatusLabel("Status: Fetching info for " + curSet.ToString());
             List<MTGCard> Cards = DM.GetCardListForSet(curSet);
+            curSet.Cards = Cards;
             UpdateStatusLabel("Status: Complete");
 
             if (Cards != null)
@@ -549,6 +550,21 @@ namespace MTGUtils
             }
             UpdateStatusLabel("Status: Fetching info for selected sets");
             DM.ParseAllCards(setsToPass);
+            UpdateStatusLabel("Status: Complete");
+        }
+
+        /* Pass current set and TextBoxParseCardPrice info to DataManager.ParseAllPricePoints() */
+        private void parseAllPricePointsButton_Click(object sender, EventArgs e)
+        {
+            MTGSet curSet = (MTGSet)mtgSetsGraphListBox.SelectedItem;
+            if (curSet == null)
+            {
+                UpdateStatusLabel("Status: Must select a set before parsing cards for a set.");
+                return;
+            }
+            double GivenPrice = double.Parse(textBoxParseCardPrice.Text);
+            UpdateStatusLabel("Status: Fetching info for current set");
+            DM.ParseAllPricePoints(curSet, (ulong)(GivenPrice * 100));
             UpdateStatusLabel("Status: Complete");
         }
     }

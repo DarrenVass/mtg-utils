@@ -46,12 +46,14 @@
             this.mtgSetsCheckedListBox = new System.Windows.Forms.CheckedListBox();
             this.updateSetsButton = new System.Windows.Forms.Button();
             this.allMTGSetsButton = new System.Windows.Forms.Button();
+            this.textBoxParseCardPrice = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.parseAllPricePointsButton = new System.Windows.Forms.Button();
             this.parseAllCardsButton = new System.Windows.Forms.Button();
             this.mainTabs = new System.Windows.Forms.TabPage();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerTopMain = new System.Windows.Forms.SplitContainer();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.splitContainerAutoParse = new System.Windows.Forms.SplitContainer();
             this.splitContainerTopSourcesSetsCheckBoxes = new System.Windows.Forms.SplitContainer();
             this.splitContainerBottomMain = new System.Windows.Forms.SplitContainer();
             this.splitContainerGraphSetsCards = new System.Windows.Forms.SplitContainer();
@@ -92,9 +94,9 @@
             this.splitContainerTopMain.Panel1.SuspendLayout();
             this.splitContainerTopMain.Panel2.SuspendLayout();
             this.splitContainerTopMain.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerAutoParse)).BeginInit();
+            this.splitContainerAutoParse.Panel1.SuspendLayout();
+            this.splitContainerAutoParse.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopSourcesSetsCheckBoxes)).BeginInit();
             this.splitContainerTopSourcesSetsCheckBoxes.Panel1.SuspendLayout();
             this.splitContainerTopSourcesSetsCheckBoxes.Panel2.SuspendLayout();
@@ -290,19 +292,38 @@
             // groupBox4
             // 
             groupBox4.AutoSize = true;
+            groupBox4.Controls.Add(this.textBoxParseCardPrice);
+            groupBox4.Controls.Add(this.label3);
             groupBox4.Controls.Add(this.parseAllPricePointsButton);
             groupBox4.Controls.Add(this.parseAllCardsButton);
             groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             groupBox4.Location = new System.Drawing.Point(0, 0);
             groupBox4.Name = "groupBox4";
-            groupBox4.Size = new System.Drawing.Size(125, 149);
+            groupBox4.Size = new System.Drawing.Size(239, 149);
             groupBox4.TabIndex = 0;
             groupBox4.TabStop = false;
             groupBox4.Text = "Auto Parsing";
             // 
+            // textBoxParseCardPrice
+            // 
+            this.textBoxParseCardPrice.Location = new System.Drawing.Point(131, 123);
+            this.textBoxParseCardPrice.Name = "textBoxParseCardPrice";
+            this.textBoxParseCardPrice.Size = new System.Drawing.Size(98, 20);
+            this.textBoxParseCardPrice.TabIndex = 3;
+            this.textBoxParseCardPrice.Text = "0";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(127, 60);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(106, 60);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Only parse\r\ncards with \r\nprice above:";
+            // 
             // parseAllPricePointsButton
             // 
-            this.parseAllPricePointsButton.Enabled = false;
             this.parseAllPricePointsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.parseAllPricePointsButton.Location = new System.Drawing.Point(6, 83);
             this.parseAllPricePointsButton.Name = "parseAllPricePointsButton";
@@ -310,6 +331,7 @@
             this.parseAllPricePointsButton.TabIndex = 1;
             this.parseAllPricePointsButton.Text = "Parse all price points for current set";
             this.parseAllPricePointsButton.UseVisualStyleBackColor = true;
+            this.parseAllPricePointsButton.Click += new System.EventHandler(this.parseAllPricePointsButton_Click);
             // 
             // parseAllCardsButton
             // 
@@ -366,7 +388,7 @@
             // 
             // splitContainerTopMain.Panel1
             // 
-            this.splitContainerTopMain.Panel1.Controls.Add(this.splitContainer1);
+            this.splitContainerTopMain.Panel1.Controls.Add(this.splitContainerAutoParse);
             this.splitContainerTopMain.Panel1.Controls.Add(groupBox3);
             // 
             // splitContainerTopMain.Panel2
@@ -376,19 +398,19 @@
             this.splitContainerTopMain.SplitterDistance = 884;
             this.splitContainerTopMain.TabIndex = 8;
             // 
-            // splitContainer1
+            // splitContainerAutoParse
             // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainerAutoParse.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerAutoParse.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
+            this.splitContainerAutoParse.Location = new System.Drawing.Point(0, 0);
+            this.splitContainerAutoParse.Name = "splitContainerAutoParse";
             // 
-            // splitContainer1.Panel1
+            // splitContainerAutoParse.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(groupBox4);
-            this.splitContainer1.Size = new System.Drawing.Size(654, 149);
-            this.splitContainer1.SplitterDistance = 125;
-            this.splitContainer1.TabIndex = 1;
+            this.splitContainerAutoParse.Panel1.Controls.Add(groupBox4);
+            this.splitContainerAutoParse.Size = new System.Drawing.Size(654, 149);
+            this.splitContainerAutoParse.SplitterDistance = 239;
+            this.splitContainerAutoParse.TabIndex = 1;
             // 
             // splitContainerTopSourcesSetsCheckBoxes
             // 
@@ -690,6 +712,7 @@
             groupBox1.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
             groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
             this.mainTabs.ResumeLayout(false);
             this.mainTabs.PerformLayout();
             this.splitContainerMain.Panel1.ResumeLayout(false);
@@ -700,10 +723,10 @@
             this.splitContainerTopMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopMain)).EndInit();
             this.splitContainerTopMain.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
+            this.splitContainerAutoParse.Panel1.ResumeLayout(false);
+            this.splitContainerAutoParse.Panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainerAutoParse)).EndInit();
+            this.splitContainerAutoParse.ResumeLayout(false);
             this.splitContainerTopSourcesSetsCheckBoxes.Panel1.ResumeLayout(false);
             this.splitContainerTopSourcesSetsCheckBoxes.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerTopSourcesSetsCheckBoxes)).EndInit();
@@ -773,9 +796,11 @@
         private System.Windows.Forms.Label lbl3DayAveragePrice;
         private System.Windows.Forms.Label lblAveragePrice;
         private System.Windows.Forms.Label lblCurrentPrice;
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.SplitContainer splitContainerAutoParse;
         private System.Windows.Forms.Button parseAllPricePointsButton;
         private System.Windows.Forms.Button parseAllCardsButton;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBoxParseCardPrice;
     }
 }
 
